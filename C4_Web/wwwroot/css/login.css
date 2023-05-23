@@ -1,0 +1,101 @@
+body {
+    background-color: #f3f4f6;
+}
+
+login-center {
+    position: relative;
+    width: 1604px;
+    margin: 0 auto;
+}
+
+.nav {
+    position: absolute;
+    top: 120px;
+    left: 114px;
+    width: 384px;
+    height: 600px;
+    border-radius: 20px;
+    background-color: #fff;
+    border: 15px;
+}
+
+    .nav ul li {
+        margin: 15px;
+        font-size: 20px;
+        font-weight: 700;
+        font-family: 楷体;
+        margin-left: 50px;
+    }
+
+        .nav ul li:first-child {
+            margin-top: 40px;
+        }
+
+        .nav ul li a {
+            text-decoration: none;
+            color: black;
+        }
+
+            .nav ul li a:hover {
+                display: block;
+                width: 290px;
+                height: 25px;
+                cursor: pointer;
+                text-decoration: underline;
+                color: #6b7280;
+                background-color: rgba(250, 245,240,.4);
+                border-radius: 4px;
+                transition: .3s ease-in-out;
+            }
+
+.login-right {
+    width: 870px;
+    height: 600px;
+    position: absolute;
+    top: 120px;
+    left: 524px;
+    background-color: #fff;
+    border-radius: 20px;
+}
+
+    .login-right img {
+        height: 158px;
+        width: 158px;
+        margin-left: 50px;
+        margin-top: 50px;
+        border-radius: 79px;
+        border: 1px solid #51586623;
+    }
+
+.f {
+    position: absolute;
+    top: 50px;
+    margin-left: 228px;
+    font-size: 22px;
+    color: #374151;
+}
+
+.f2 {
+    position: absolute;
+    top: 80px;
+    margin-left: 228px;
+    font-size: 16px;
+}
+
+.f3 {
+    position: absolute;
+    top: 100px;
+    margin-left: 228px;
+    font-size: 16px;
+    color: #f87171;
+}
+
+.f4 .btn {
+    border: none;
+    position: absolute;
+    top: 155px;
+    margin-left: 228px;
+    width: 80px;
+    height: 40px;
+    color: #ed4781;
+}
