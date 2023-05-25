@@ -21,6 +21,32 @@ int Server_Box::Listen_Model(Server_Box* server_box)
 
 	return 0;
 }
+//
+void* Server_Box::send_queue::action(int flag, char* data)
+{
+	//加锁
+	mtx.lock();
+	switch (flag)
+	{
+	//获取当前队头元素
+	case 0:
+		return _queue.front();
+		break;
+	//加入元素
+	case 1:
+		_queue.push(data);
+		break;
+	//删除元素
+	case 2:
+		delete _queue.front();
+		_queue.pop();
+		break;
+	}
+	//解锁
+	mtx.unlock();
+	return nullptr;
+}
+
 
 int Server_Box::Cmd_Model(Server_Box* server_box)
 {
@@ -38,31 +64,31 @@ int Server_Box::Cmd_Model(Server_Box* server_box)
 	return 0;
 }
 
-int Server_Box::Send(Server_Box* server_box, SOCKET target, HANDLE file, std::string cmd)
+int Server_Box::Send(Server_Box* server_box, SOCKET target, void* file, uint16_t len)
 {
 	if (file == NULL)
 	{
+
 	}
 
 	return 0;
 }
 
-int Server_Box::AsyncSend(Server_Box* server_box, SOCKET target, HANDLE file, std::string cmd)
+int Server_Box::AsyncSend(Server_Box* server_box, SOCKET target, void* file, uint16_t len)
 {
 	if (file == NULL)
 	{
+		
 	}
 
 	return 0;
 }
 
-int Server_Box::Send_Model(Server_Box* server_box)
+int Server_Box::Send_Model(Server_Box* server_box, SOCKET target, HANDLE file, std::string cmd)
 {
 	while (server_box->isopen)
 	{
-		if (!server_box->send_queue.empty())
-		{
-		}
+		
 		Sleep(10);
 	}
 
@@ -108,13 +134,19 @@ int Server_Box::run()
 {
 	isopen = true;
 
-	HANDLE h_start = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)&Listen_Model, this, 0, NULL);
-	HANDLE h_cmd = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)&Cmd_Model, this, 0, NULL);
-	HANDLE h_core = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)&Core_Model, this, 0, NULL);
+	std::thread listen_thr(Listen_Model, this);
+	std::thread Cmd_thr(Cmd_Model, this);
+	std::thread Core_thr(Core_Model, this);
+	
+	HANDLE h_start = listen_thr.native_handle();
+	HANDLE h_cmd = Cmd_thr.native_handle();
+	HANDLE h_core = Core_thr.native_handle();
+
 
 	Check_ret(WaitForSingleObject(h_start, INFINITE), -1);
 	Check_ret(WaitForSingleObject(h_cmd, INFINITE), -1);
 	Check_ret(WaitForSingleObject(h_core, INFINITE), -1);
+
 	return 0;
 }
 
@@ -134,6 +166,7 @@ Server_Box::~Server_Box()
 
 	//清理申请内存
 	if (lpwsadata != nullptr) delete lpwsadata;
+
 
 	std::cout << "服务器数据释放" << std::endl;
 }
