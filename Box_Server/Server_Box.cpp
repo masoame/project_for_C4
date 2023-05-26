@@ -24,13 +24,15 @@ int Server_Box::Listen_Model(Server_Box* server_box)
 //
 void* Server_Box::send_queue::action(int flag, char* data)
 {
-	//加锁
-	mtx.lock();
+	std::unique_lock<std::mutex> lck(mtx);
 	switch (flag)
 	{
 	//获取当前队头元素
 	case 0:
-		return _queue.front();
+		char* temp=_queue.front();
+
+		return temp;
+
 		break;
 	//加入元素
 	case 1:
@@ -38,12 +40,10 @@ void* Server_Box::send_queue::action(int flag, char* data)
 		break;
 	//删除元素
 	case 2:
-		delete _queue.front();
+		delete[] _queue.front();
 		_queue.pop();
 		break;
 	}
-	//解锁
-	mtx.unlock();
 	return nullptr;
 }
 
