@@ -22,26 +22,31 @@ int Server_Box::Listen_Model(Server_Box* server_box)
 	return 0;
 }
 //
-void* Server_Box::send_queue::action(int flag, char* data)
+void* Server_Box::SEND_QUEUE::action(FLAG flag, char* data)
 {
 	std::unique_lock<std::mutex> lck(mtx);
 	switch (flag)
 	{
 	//获取当前队头元素
-	case 0:
-		char* temp=_queue.front();
+	case front:
 
-		return temp;
-
+		return _queue.front();
 		break;
 	//加入元素
-	case 1:
+	case push:
+
 		_queue.push(data);
 		break;
 	//删除元素
-	case 2:
+	case pop:
+
 		delete[] _queue.front();
 		_queue.pop();
+		break;
+	case isempty:
+
+		return (void*)_queue.empty();
+
 		break;
 	}
 	return nullptr;
@@ -56,7 +61,7 @@ int Server_Box::Cmd_Model(Server_Box* server_box)
 
 		if (strcmp(server_box->buffer_cmd, "#quit") == 0)
 		{
-			shutdown(server_box->listen_socket, SD_BOTH);
+			//shutdown(server_box->listen_socket, SD_BOTH);
 			server_box->isopen = false;
 			std::cout << "服务器关闭..." << std::endl;
 		}
@@ -84,12 +89,15 @@ int Server_Box::AsyncSend(Server_Box* server_box, SOCKET target, void* file, uin
 	return 0;
 }
 
-int Server_Box::Send_Model(Server_Box* server_box, SOCKET target, HANDLE file, std::string cmd)
+int Server_Box::Send_Model(Server_Box* server_box)
 {
 	while (server_box->isopen)
 	{
-		
-		Sleep(10);
+		//if (server_box->send_queue.action(SEND_QUEUE::isempty))
+		//{
+		//	std::cout << "队列为空等待..." << std::endl;
+		//}
+		Sleep(100);
 	}
 
 	return 0;
@@ -97,6 +105,17 @@ int Server_Box::Send_Model(Server_Box* server_box, SOCKET target, HANDLE file, s
 
 int Server_Box::Recv_Model(Server_Box* server_box)
 {
+	sockaddr_in temp = {0};
+	int len = sizeof(sockaddr);
+	char* buffer = new char[1024];
+	while (server_box->isopen)
+	{
+		recv(server_box->listen_socket, buffer, 1024, 0);
+
+		std::cout << "收到回复地址:" << inet_ntoa(temp.sin_addr) << "端口:" << ntohs(temp.sin_port) << std::endl;
+		Sleep(10);
+	}
+
 	return 0;
 }
 
@@ -127,6 +146,17 @@ int Server_Box::init(const char* ip, const int port)
 	Check_ret(bind(listen_socket, (sockaddr*)&listen_adress, sizeof(sockaddr)), -1);
 
 	Check_ret(listen(listen_socket, 5), -1);
+	int optval = 1;
+	setsockopt(listen_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&optval, sizeof(optval));
+
+
+	//创建IOCP句柄
+	HANDLE iocpHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
+	Check_ret(iocpHandle, NULL);
+
+	Check_ret(CreateIoCompletionPort((HANDLE)listen_socket, iocpHandle, 0, 0), NULL);
+
+	std::cout << "Server started." << std::endl;
 
 	return 0;
 }
@@ -137,16 +167,24 @@ int Server_Box::run()
 
 	std::thread listen_thr(Listen_Model, this);
 	std::thread Cmd_thr(Cmd_Model, this);
-	std::thread Core_thr(Core_Model, this);
+	std::thread Recv_thr(Recv_Model, this);
+	std::thread Send_thr(Send_Model, this);
 	
-	HANDLE h_start = listen_thr.native_handle();
-	HANDLE h_cmd = Cmd_thr.native_handle();
-	HANDLE h_core = Core_thr.native_handle();
+	//HANDLE h_listen = listen_thr.native_handle();
+	//HANDLE h_cmd = Cmd_thr.native_handle();
+	//HANDLE h_core = Core_thr.native_handle();
+	//HANDLE h_send = Send_thr.native_handle();
 
 
-	Check_ret(WaitForSingleObject(h_start, INFINITE), -1);
-	Check_ret(WaitForSingleObject(h_cmd, INFINITE), -1);
-	Check_ret(WaitForSingleObject(h_core, INFINITE), -1);
+	//Check_ret(WaitForSingleObject(h_listen, INFINITE), -1);
+	//Check_ret(WaitForSingleObject(h_cmd, INFINITE), -1);
+	//Check_ret(WaitForSingleObject(h_core, INFINITE), -1);
+	//Check_ret(WaitForSingleObject(h_send, INFINITE), -1);
+
+	listen_thr.join();
+	Cmd_thr.join();
+	Recv_thr.join();
+	Send_thr.join();
 
 	return 0;
 }

@@ -10,6 +10,6 @@
 #define Check_ret(n,error_code)\
 if((n)==error_code){\
 	perror(#n);\
-	printf("错误代码为: %d",GetLastError());\
+	std::cout << "错误代码为: " << GetLastError();\
 	return -1;\
 }

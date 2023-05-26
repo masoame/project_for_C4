@@ -10,12 +10,14 @@ int main(int argc, char* argv[])
 	sockaddr_in server_addr;
 
 	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = inet_addr("61.139.65.135");
-	server_addr.sin_port = ntohs(33855);
+	server_addr.sin_addr.s_addr = inet_addr("192.168.137.1");
+	server_addr.sin_port = ntohs(0x0721);
 
 	std::cout << connect(server_sock, (sockaddr*)&server_addr, sizeof(sockaddr)) << std::endl;
 
-	std::cout << "server success" << buffer << std::endl;
+
+	strcpy(buffer, "please server send client");
+	std::cout << send(server_sock, buffer, strlen(buffer) + 1, 0);
 
 	close(server_sock);
 	return 0;

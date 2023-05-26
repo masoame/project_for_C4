@@ -20,7 +20,7 @@ private:
 	std::set<SOCKET> BOX_SOCK;
 
 	//发送队列类
-	class send_queue {
+	class SEND_QUEUE {
 
 	private:
 		//互斥量
@@ -29,10 +29,18 @@ private:
 		std::queue<char*> _queue;
 
 	public:
-		//事件操作
-		void* action(int flag = 0, char* data = nullptr);
 
-	};
+		enum FLAG
+		{
+			isempty, front, push, pop
+		};
+
+		//事件操作
+		void* action(FLAG = isempty, char* data = nullptr);
+
+
+
+	}send_queue;
 
 	//发送队列
 
@@ -54,7 +62,7 @@ private:
 	//发送(非异步发送)
 	static int Send(Server_Box* server_box, SOCKET target, void* file, uint16_t len);
 	//发送模块
-	static int Send_Model(Server_Box* server_box, SOCKET target, HANDLE file, std::string cmd);
+	static int Send_Model(Server_Box* server_box);
 	//接收模块
 	static int Recv_Model(Server_Box* server_box);
 	//核心处理模块
