@@ -102,6 +102,7 @@ int Server_Box::Recv_Model(Server_Box* server_box)
 
 int Server_Box::Core_Model(Server_Box* server_box)
 {
+
 	return 0;
 }
 
