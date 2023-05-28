@@ -7,7 +7,8 @@
 #include<WinSock2.h>
 #include<mutex>
 #include <WS2tcpip.h>
-#include<MSWSock.h>
+
+#include <mswsock.h>
 
 
 //#include<unique_lock>

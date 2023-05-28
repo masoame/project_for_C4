@@ -2,6 +2,14 @@
 
 int Server_Box::Listen_Model(Server_Box* server_box)
 {
+
+	//GetAcceptExSockaddrs
+	SOCKET bRetVal = lpfnAcceptEx(listen_socket, AcceptSocket, lpOutputBuf, outBufLen - ((sizeof(sockaddr_in) + 16) * 2), sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, &olOverlap);
+
+
+
+
+
 	sockaddr_in temp_addr;
 	int temp_len = sizeof(sockaddr);
 
@@ -184,15 +192,13 @@ int Server_Box::init(const char* ip, const int port)
 	perIoData->DataBuf.len = MAX_BUFF_SIZE;
 	perIoData->DataBuf.buf = perIoData->Buffer;
 
-	LPFN_ACCEPTEX m_lpfnAcceptEx;				// AcceptEx函数指针  
+	LPFN_ACCEPTEX lpfnAcceptEx;				// AcceptEx函数指针  
 	GUID GuidAcceptEx = WSAID_ACCEPTEX;			// GUID，这个是识别AcceptEx函数必须的  
 	DWORD dwBytes = 0;
 
-	Check_ret(WSAIoctl(listen_socket, SIO_GET_EXTENSION_FUNCTION_POINTER, &GuidAcceptEx, sizeof(GuidAcceptEx), &m_lpfnAcceptEx, sizeof(m_lpfnAcceptEx), &dwBytes, NULL, NULL), SOCKET_ERROR);
+	//导入
+	Check_ret(WSAIoctl(listen_socket, SIO_GET_EXTENSION_FUNCTION_POINTER, &GuidAcceptEx, sizeof(GuidAcceptEx), &lpfnAcceptEx, sizeof(lpfnAcceptEx), &dwBytes, NULL, NULL), SOCKET_ERROR);
 
-
-	//GetAcceptExSockaddrs
-	lpfnAcceptEx()
 	std::cout << "Server started." << std::endl;
 
 	return 0;

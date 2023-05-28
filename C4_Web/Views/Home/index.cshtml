@@ -34,11 +34,12 @@
 		<span class="zero1">01 上传文本文件</span>
 		<span class="zero2">02 选择发言人</span>
 		<sapn class="zero3">03 下载语音文件</sapn>
-		<form action="">
-			<input type="file" value="选择模型" class="w1"><br>
+		<form method="post" enctype="multipart/form-data" action="/Home/Index">
+			<input type="file" name="files" value="选择模型" class="w1"><br>
 			<input type="file" value="选择配置" class="w3">
 			<textarea class="posi"></textarea>
-			<input type="button" value="点击上传" class="w2">
+			<input type="submit" value="点击上传" class="w2" />
+			@*<input type="button" value="点击上传" class="w2">*@
 		</form>
 	</div>
 </div>
