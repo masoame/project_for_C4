@@ -12,6 +12,7 @@ typedef struct IO_DATA {
 	DWORD BytesRecv;
 } IO_DATA, * LPIO_DATA;
 
+
 //盒子服务器
 class Server_Box
 {
