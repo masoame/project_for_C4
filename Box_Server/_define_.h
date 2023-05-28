@@ -10,6 +10,6 @@
 #define Check_ret(n,error_code)\
 if((n)==error_code){\
 	perror(#n);\
-	std::cout << "错误代码为: " << GetLastError();\
+	std::cout << "file:" << __FILE__<< "\nline:" << __LINE__<< "\n错误代码为: " << GetLastError() << std::endl;\
 	return -1;\
 }

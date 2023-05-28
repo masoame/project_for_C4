@@ -1,6 +1,16 @@
 ﻿#pragma once
 #include"_stdlib_.h"
 #include"_define_.h"
+#define MAX_BUFF_SIZE 1024
+
+//重叠结构体
+typedef struct IO_DATA {
+	WSAOVERLAPPED Overlapped;
+	WSABUF DataBuf;
+	CHAR Buffer[MAX_BUFF_SIZE];
+	DWORD BytesSend;
+	DWORD BytesRecv;
+} IO_DATA, * LPIO_DATA;
 
 //盒子服务器
 class Server_Box
@@ -18,6 +28,11 @@ private:
 
 	//存放语音盒用户组
 	std::set<SOCKET> BOX_SOCK;
+
+	//CPU核数
+	int CPUCORE_NUM;
+
+	HANDLE iocpHandle;
 
 	//发送队列类
 	class SEND_QUEUE {
@@ -37,8 +52,6 @@ private:
 
 		//事件操作
 		void* action(FLAG = isempty, char* data = nullptr);
-
-
 
 	}send_queue;
 

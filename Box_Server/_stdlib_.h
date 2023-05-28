@@ -6,6 +6,10 @@
 #include<iostream>
 #include<WinSock2.h>
 #include<mutex>
+#include <WS2tcpip.h>
+#include<MSWSock.h>
+
+
 //#include<unique_lock>
 
 #pragma comment(lib, "Ws2_32.lib")

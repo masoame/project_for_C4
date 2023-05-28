@@ -105,16 +105,27 @@ int Server_Box::Send_Model(Server_Box* server_box)
 
 int Server_Box::Recv_Model(Server_Box* server_box)
 {
-	sockaddr_in temp = {0};
-	int len = sizeof(sockaddr);
-	char* buffer = new char[1024];
+	DWORD IO_SIZE;
+	void* lpCompletionKey;
+	LPOVERLAPPED lpOverlapped;
+
+
 	while (server_box->isopen)
 	{
-		recv(server_box->listen_socket, buffer, 1024, 0);
+		Check_ret(GetQueuedCompletionStatus(server_box->iocpHandle, &IO_SIZE, (PULONG_PTR)&lpCompletionKey, &lpOverlapped, 5), false);
 
-		std::cout << "收到回复地址:" << inet_ntoa(temp.sin_addr) << "端口:" << ntohs(temp.sin_port) << std::endl;
+		if (IO_SIZE == 0)
+		{
+			std::cout << "客户端断开" << std::endl;
+
+		}
+
+	
 		Sleep(10);
 	}
+
+
+
 
 	return 0;
 }
@@ -133,29 +144,55 @@ int Server_Box::init(const char* ip, const int port)
 
 	lpwsadata = new WSADATA;
 
+	SYSTEM_INFO si;
+	GetSystemInfo(&si);
+
+	CPUCORE_NUM = si.dwNumberOfProcessors;
+
 	if (WSAStartup(MAKEWORD(2, 2), lpwsadata) != 0)
 	{
 		return -1;
 	}
-	listen_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	//创建监听SOCKET
+	listen_socket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
 
+	//创建IOCP句柄
+	iocpHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
+	Check_ret(iocpHandle, NULL);
+
+	//将socket绑定到IOCP
+	Check_ret(CreateIoCompletionPort((HANDLE)listen_socket, iocpHandle, 0, 0), NULL);
+
+	//监听地址
 	listen_adress.sin_family = AF_INET;
 	listen_adress.sin_addr.S_un.S_addr = inet_addr(ip);
 	listen_adress.sin_port = ntohs(port);
 
+	//固定端口
 	Check_ret(bind(listen_socket, (sockaddr*)&listen_adress, sizeof(sockaddr)), -1);
 
-	Check_ret(listen(listen_socket, 5), -1);
-	int optval = 1;
-	setsockopt(listen_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&optval, sizeof(optval));
+	//开始监听
+	Check_ret(listen(listen_socket, SOMAXCONN), -1);
+
+	//int optval = 1;
+	//setsockopt(listen_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&optval, sizeof(optval));
 
 
-	//创建IOCP句柄
-	HANDLE iocpHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
-	Check_ret(iocpHandle, NULL);
+	// 创建重叠结构体
+	LPIO_DATA perIoData = new IO_DATA;
+	memset(&(perIoData->Overlapped), 0, sizeof(WSAOVERLAPPED));
+	perIoData->DataBuf.len = MAX_BUFF_SIZE;
+	perIoData->DataBuf.buf = perIoData->Buffer;
 
-	Check_ret(CreateIoCompletionPort((HANDLE)listen_socket, iocpHandle, 0, 0), NULL);
+	LPFN_ACCEPTEX m_lpfnAcceptEx;				// AcceptEx函数指针  
+	GUID GuidAcceptEx = WSAID_ACCEPTEX;			// GUID，这个是识别AcceptEx函数必须的  
+	DWORD dwBytes = 0;
 
+	Check_ret(WSAIoctl(listen_socket, SIO_GET_EXTENSION_FUNCTION_POINTER, &GuidAcceptEx, sizeof(GuidAcceptEx), &m_lpfnAcceptEx, sizeof(m_lpfnAcceptEx), &dwBytes, NULL, NULL), SOCKET_ERROR);
+
+
+	GetAcceptExSockaddrs
+	AcceptEx();
 	std::cout << "Server started." << std::endl;
 
 	return 0;
