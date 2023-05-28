@@ -191,8 +191,8 @@ int Server_Box::init(const char* ip, const int port)
 	Check_ret(WSAIoctl(listen_socket, SIO_GET_EXTENSION_FUNCTION_POINTER, &GuidAcceptEx, sizeof(GuidAcceptEx), &m_lpfnAcceptEx, sizeof(m_lpfnAcceptEx), &dwBytes, NULL, NULL), SOCKET_ERROR);
 
 
-	GetAcceptExSockaddrs
-	AcceptEx();
+	//GetAcceptExSockaddrs
+	lpfnAcceptEx()
 	std::cout << "Server started." << std::endl;
 
 	return 0;
