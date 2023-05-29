@@ -81,6 +81,8 @@ private:
 	static int Recv_Model(Server_Box* server_box);
 	//核心处理模块
 	static int Core_Model(Server_Box* server_box);
+	//工作线程
+	static int Work_Model(Server_Box* server_box);
 public:
 	//初始化服务器(默认监听端口为0x0721)
 	int init(const char* ip = "0.0.0.0", const int port = 0x0721);

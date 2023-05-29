@@ -4,7 +4,7 @@ int Server_Box::Listen_Model(Server_Box* server_box)
 {
 
 	//GetAcceptExSockaddrs
-	SOCKET bRetVal = lpfnAcceptEx(listen_socket, AcceptSocket, lpOutputBuf, outBufLen - ((sizeof(sockaddr_in) + 16) * 2), sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, &olOverlap);
+	lpfnAcceptEx(listen_socket, AcceptSocket, lpOutputBuf, outBufLen - ((sizeof(sockaddr_in) + 16) * 2), sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, &olOverlap);
 
 
 
@@ -72,6 +72,7 @@ int Server_Box::Cmd_Model(Server_Box* server_box)
 			//shutdown(server_box->listen_socket, SD_BOTH);
 			server_box->isopen = false;
 			std::cout << "服务器关闭..." << std::endl;
+			exit(-1);
 		}
 	}
 	return 0;
@@ -113,24 +114,7 @@ int Server_Box::Send_Model(Server_Box* server_box)
 
 int Server_Box::Recv_Model(Server_Box* server_box)
 {
-	DWORD IO_SIZE;
-	void* lpCompletionKey;
-	LPOVERLAPPED lpOverlapped;
-
-
-	while (server_box->isopen)
-	{
-		Check_ret(GetQueuedCompletionStatus(server_box->iocpHandle, &IO_SIZE, (PULONG_PTR)&lpCompletionKey, &lpOverlapped, 5), false);
-
-		if (IO_SIZE == 0)
-		{
-			std::cout << "客户端断开" << std::endl;
-
-		}
-
 	
-		Sleep(10);
-	}
 
 
 
@@ -192,7 +176,7 @@ int Server_Box::init(const char* ip, const int port)
 	perIoData->DataBuf.len = MAX_BUFF_SIZE;
 	perIoData->DataBuf.buf = perIoData->Buffer;
 
-	LPFN_ACCEPTEX lpfnAcceptEx;				// AcceptEx函数指针  
+	LPFN_ACCEPTEX lpfnAcceptEx;					// AcceptEx函数指针  
 	GUID GuidAcceptEx = WSAID_ACCEPTEX;			// GUID，这个是识别AcceptEx函数必须的  
 	DWORD dwBytes = 0;
 
@@ -200,6 +184,28 @@ int Server_Box::init(const char* ip, const int port)
 	Check_ret(WSAIoctl(listen_socket, SIO_GET_EXTENSION_FUNCTION_POINTER, &GuidAcceptEx, sizeof(GuidAcceptEx), &lpfnAcceptEx, sizeof(lpfnAcceptEx), &dwBytes, NULL, NULL), SOCKET_ERROR);
 
 	std::cout << "Server started." << std::endl;
+
+	return 0;
+}
+
+int Server_Box::Work_Model(Server_Box* server_box)
+{
+	DWORD IO_SIZE;
+	void* lpCompletionKey;
+	LPOVERLAPPED lpOverlapped;
+
+
+	while (server_box->isopen)
+	{
+		Check_ret(GetQueuedCompletionStatus(server_box->iocpHandle, &IO_SIZE, (PULONG_PTR)&lpCompletionKey, &lpOverlapped, 5), false);
+
+
+
+
+		Sleep(10);
+	}
+
+
 
 	return 0;
 }
@@ -212,17 +218,6 @@ int Server_Box::run()
 	std::thread Cmd_thr(Cmd_Model, this);
 	std::thread Recv_thr(Recv_Model, this);
 	std::thread Send_thr(Send_Model, this);
-	
-	//HANDLE h_listen = listen_thr.native_handle();
-	//HANDLE h_cmd = Cmd_thr.native_handle();
-	//HANDLE h_core = Core_thr.native_handle();
-	//HANDLE h_send = Send_thr.native_handle();
-
-
-	//Check_ret(WaitForSingleObject(h_listen, INFINITE), -1);
-	//Check_ret(WaitForSingleObject(h_cmd, INFINITE), -1);
-	//Check_ret(WaitForSingleObject(h_core, INFINITE), -1);
-	//Check_ret(WaitForSingleObject(h_send, INFINITE), -1);
 
 	listen_thr.join();
 	Cmd_thr.join();
