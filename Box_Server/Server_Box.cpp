@@ -1,65 +1,5 @@
 ﻿#include"Server_Box.h"
 
-int Server_Box::Listen_Model(Server_Box* server_box)
-{
-
-	//GetAcceptExSockaddrs
-	lpfnAcceptEx(listen_socket, AcceptSocket, lpOutputBuf, outBufLen - ((sizeof(sockaddr_in) + 16) * 2), sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &dwBytes, &olOverlap);
-
-
-
-
-
-	sockaddr_in temp_addr;
-	int temp_len = sizeof(sockaddr);
-
-	//存储临时套接字
-	SOCKET SOCKET_TEMP;
-
-	while (server_box->isopen)
-	{
-		SOCKET_TEMP = accept(server_box->listen_socket, (sockaddr*)&temp_addr, &temp_len);
-		Check_ret(SOCKET_TEMP, SOCKET_ERROR);
-
-		//加入表中方便管理
-		server_box->BOX_SOCK.insert(SOCKET_TEMP);
-		std::cout << "设备ip:" << inet_ntoa(temp_addr.sin_addr) << "\n端口:" << ntohs(temp_addr.sin_port) << "\n设备链接成功" << std::endl;
-	}
-	//select()
-
-	return 0;
-}
-//
-void* Server_Box::SEND_QUEUE::action(FLAG flag, char* data)
-{
-	std::unique_lock<std::mutex> lck(mtx);
-	switch (flag)
-	{
-	//获取当前队头元素
-	case front:
-
-		return _queue.front();
-		break;
-	//加入元素
-	case push:
-
-		_queue.push(data);
-		break;
-	//删除元素
-	case pop:
-
-		delete[] _queue.front();
-		_queue.pop();
-		break;
-	case isempty:
-
-		return (void*)_queue.empty();
-
-		break;
-	}
-	return nullptr;
-}
-
 
 int Server_Box::Cmd_Model(Server_Box* server_box)
 {
@@ -78,69 +18,20 @@ int Server_Box::Cmd_Model(Server_Box* server_box)
 	return 0;
 }
 
-int Server_Box::Send(Server_Box* server_box, SOCKET target, void* file, uint16_t len)
-{
-	if (file == NULL)
-	{
-
-	}
-
-	return 0;
-}
-
-int Server_Box::AsyncSend(Server_Box* server_box, SOCKET target, void* file, uint16_t len)
-{
-	if (file == NULL)
-	{
-		
-	}
-
-	return 0;
-}
-
-int Server_Box::Send_Model(Server_Box* server_box)
-{
-	while (server_box->isopen)
-	{
-		//if (server_box->send_queue.action(SEND_QUEUE::isempty))
-		//{
-		//	std::cout << "队列为空等待..." << std::endl;
-		//}
-		Sleep(100);
-	}
-
-	return 0;
-}
-
-int Server_Box::Recv_Model(Server_Box* server_box)
-{
-	
-
-
-
-
-	return 0;
-}
-
-int Server_Box::Core_Model(Server_Box* server_box)
-{
-
-	return 0;
-}
 
 int Server_Box::init(const char* ip, const int port)
 {
 	isopen = true;
 
+	
 	buffer_cmd = new char[2048];
 
 	lpwsadata = new WSADATA;
 
-	SYSTEM_INFO si;
-	GetSystemInfo(&si);
+	//获取本地系统信息
+	GetSystemInfo(&sys_info);
 
-	CPUCORE_NUM = si.dwNumberOfProcessors;
-
+	//初始化网络环境
 	if (WSAStartup(MAKEWORD(2, 2), lpwsadata) != 0)
 	{
 		return -1;
@@ -151,9 +42,6 @@ int Server_Box::init(const char* ip, const int port)
 	//创建IOCP句柄
 	iocpHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
 	Check_ret(iocpHandle, NULL);
-
-	//将socket绑定到IOCP
-	Check_ret(CreateIoCompletionPort((HANDLE)listen_socket, iocpHandle, 0, 0), NULL);
 
 	//监听地址
 	listen_adress.sin_family = AF_INET;
@@ -166,38 +54,36 @@ int Server_Box::init(const char* ip, const int port)
 	//开始监听
 	Check_ret(listen(listen_socket, SOMAXCONN), -1);
 
-	//int optval = 1;
-	//setsockopt(listen_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&optval, sizeof(optval));
 
+	//将socket绑定到IOCP
+	Check_ret(CreateIoCompletionPort((HANDLE)listen_socket, iocpHandle, 0, 0), NULL);
 
-	// 创建重叠结构体
-	LPIO_DATA perIoData = new IO_DATA;
-	memset(&(perIoData->Overlapped), 0, sizeof(WSAOVERLAPPED));
-	perIoData->DataBuf.len = MAX_BUFF_SIZE;
-	perIoData->DataBuf.buf = perIoData->Buffer;
-
-	LPFN_ACCEPTEX lpfnAcceptEx;					// AcceptEx函数指针  
-	GUID GuidAcceptEx = WSAID_ACCEPTEX;			// GUID，这个是识别AcceptEx函数必须的  
-	DWORD dwBytes = 0;
-
-	//导入
-	Check_ret(WSAIoctl(listen_socket, SIO_GET_EXTENSION_FUNCTION_POINTER, &GuidAcceptEx, sizeof(GuidAcceptEx), &lpfnAcceptEx, sizeof(lpfnAcceptEx), &dwBytes, NULL, NULL), SOCKET_ERROR);
-
-	std::cout << "Server started." << std::endl;
+	//服务初始化完成
+	std::cout << "Server init complete" << std::endl;
 
 	return 0;
 }
 
+//工作模块
 int Server_Box::Work_Model(Server_Box* server_box)
 {
 	DWORD IO_SIZE;
+	//创建重叠结构体指针
 	void* lpCompletionKey;
-	LPOVERLAPPED lpOverlapped;
+
+	LPIO_DATA lpOverlapped;
 
 
 	while (server_box->isopen)
 	{
-		Check_ret(GetQueuedCompletionStatus(server_box->iocpHandle, &IO_SIZE, (PULONG_PTR)&lpCompletionKey, &lpOverlapped, 5), false);
+		bool res = GetQueuedCompletionStatus(server_box->iocpHandle, &IO_SIZE, (PULONG_PTR)lpCompletionKey, (LPOVERLAPPED*)&lpOverlapped, INFINITE);
+		if (!res)
+		{
+			if (GetLastError() == WAIT_TIMEOUT || GetLastError() == ERROR_NETNAME_DELETED)
+			{
+
+			}
+		}
 
 
 
@@ -214,23 +100,27 @@ int Server_Box::run()
 {
 	isopen = true;
 
-	std::thread listen_thr(Listen_Model, this);
-	std::thread Cmd_thr(Cmd_Model, this);
-	std::thread Recv_thr(Recv_Model, this);
-	std::thread Send_thr(Send_Model, this);
+	int work_num = sys_info.dwNumberOfProcessors * 2;
+	HANDLE* workgroup = new HANDLE[work_num];
 
-	listen_thr.join();
-	Cmd_thr.join();
-	Recv_thr.join();
-	Send_thr.join();
-
+	//创建CPU核心数两倍的工作线程
+	for (int i = 0; i!= work_num; i++)
+	{
+		workgroup[i] = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Work_Model, this, NULL, NULL);
+	}
+	//等待工作线程返回
+	for (int i = 0; i != work_num; i++)
+	{
+		WaitForSingleObject(workgroup[i], INFINITE);
+	}
 	return 0;
 }
 
 Server_Box::Server_Box()
 {
+	//服务器状态为关闭
 	isopen = false;
-
+	//网络环境未初始化
 	lpwsadata = nullptr;
 
 	buffer_cmd = nullptr;
