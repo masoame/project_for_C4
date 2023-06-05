@@ -7,9 +7,11 @@
 
 #define UDP_MTU (1472)
 
+#define SOCKADDR_IN_LEN (sizeof(sockaddr_in))
+
 #define Check_ret(n,error_code)\
 if((n)==error_code){\
 	perror(#n);\
-	std::cout << "file:" << __FILE__<< "\nline:" << __LINE__<< "\n错误代码为: " << GetLastError() << std::endl;\
-	return -1;\
+	std::cout << "file:" << __FILE__<< "\nline:" << __LINE__<< "\nGetLastError: " << GetLastError() << "\nWSAGetLastError: " << WSAGetLastError()<<std::endl;\
+	return false;\
 }

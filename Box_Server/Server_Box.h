@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include"_stdlib_.h"
 #include"_define_.h"
-#define MAX_BUFF_SIZE 1024
+
 enum IO_TYPE
 {
 	IO_ACCEPT,
@@ -17,7 +17,7 @@ typedef struct IO_DATA {
 	SOCKET socket;
 	IO_TYPE type;
 	WSABUF DataBuf;
-	CHAR Buffer[MAX_BUFF_SIZE];
+	CHAR Buffer[TCP_MTU + (SOCKADDR_IN_LEN + 16) * 2];
 
 } IO_DATA, * LPIO_DATA;
 
@@ -36,8 +36,8 @@ private:
 	//监听地址
 	sockaddr_in listen_adress;
 
-	//存放语音盒用户组
-	std::set<SOCKET> BOX_SOCK;
+	//存放重叠结构体
+	std::set<LPIO_DATA> BOX_SOCK;
 
 	//CPU核数
 	SYSTEM_INFO sys_info;
@@ -88,8 +88,11 @@ private:
 	//static int Send_Model(Server_Box* server_box);
 	////接收模块
 	//static int Recv_Model(Server_Box* server_box);
-	////核心处理模块
-	//static int Core_Model(Server_Box* server_box);
+
+	//
+	
+	//增加投递处理模块
+	static int POST_ACCEPT(Server_Box* server_box);
 	//工作线程
 	static int Work_Model(Server_Box* server_box);
 public:

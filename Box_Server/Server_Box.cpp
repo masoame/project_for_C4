@@ -23,9 +23,6 @@ int Server_Box::init(const char* ip, const int port)
 {
 	isopen = true;
 
-	
-	buffer_cmd = new char[2048];
-
 	lpwsadata = new WSADATA;
 
 	//获取本地系统信息
@@ -54,7 +51,6 @@ int Server_Box::init(const char* ip, const int port)
 	//开始监听
 	Check_ret(listen(listen_socket, SOMAXCONN), -1);
 
-
 	//将socket绑定到IOCP
 	Check_ret(CreateIoCompletionPort((HANDLE)listen_socket, iocpHandle, 0, 0), NULL);
 
@@ -64,15 +60,43 @@ int Server_Box::init(const char* ip, const int port)
 	return 0;
 }
 
+inline int Server_Box::POST_ACCEPT(Server_Box* server_box)
+{
+	//先创建好SOCKET
+	SOCKET tempsock = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, NULL, WSA_FLAG_OVERLAPPED);
+	Check_ret(tempsock, INVALID_SOCKET);
+
+	//设置重叠结构体
+	LPIO_DATA temp = new IO_DATA;
+	memset(temp, 0, sizeof(IO_DATA));
+	temp->type = IO_ACCEPT;
+	temp->DataBuf.buf = temp->Buffer;
+	temp->DataBuf.len = sizeof(temp->Buffer);
+	DWORD lpdwBytesReceived = 0;
+	//绑定到listen_sock
+	if (AcceptEx(server_box->listen_socket, tempsock, temp->DataBuf.buf, TCP_MTU, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &lpdwBytesReceived, &temp->Overlapped) == FALSE)
+	{
+		if (GetLastError() != WSA_IO_PENDING)
+		{
+			std::cout << "投递失败" << std::endl;
+			return false;
+		}
+	}
+
+
+	return 0;
+}
+
 //工作模块
 int Server_Box::Work_Model(Server_Box* server_box)
 {
+
 	DWORD IO_SIZE;
 	//创建重叠结构体指针
-	void* lpCompletionKey;
-
+	void* lpCompletionKey=nullptr;
+	//重叠结构体
 	LPIO_DATA lpOverlapped;
-
+	
 
 	while (server_box->isopen)
 	{
@@ -81,16 +105,40 @@ int Server_Box::Work_Model(Server_Box* server_box)
 		{
 			if (GetLastError() == WAIT_TIMEOUT || GetLastError() == ERROR_NETNAME_DELETED)
 			{
-
+				closesocket(lpOverlapped->socket);
+				continue;
 			}
 		}
+		if (lpOverlapped == nullptr)
+		{
+			continue;
+		}
+		switch (lpOverlapped->type)
+		{
+		case IO_ACCEPT:
+
+			std::cout << "连接请求收到" << std::endl;
+
+			break;
+		case IO_DISCONNECT:
 
 
 
+			break;
+		case IO_RECV:
+
+
+
+			break;
+		case IO_SEND:
+
+
+
+			break;
+		}
 
 		Sleep(10);
 	}
-
 
 
 	return 0;
@@ -103,11 +151,19 @@ int Server_Box::run()
 	int work_num = sys_info.dwNumberOfProcessors * 2;
 	HANDLE* workgroup = new HANDLE[work_num];
 
+	//投递SOCKET等待connect
+	for (int i = 0; i != work_num; i++)
+	{
+		POST_ACCEPT(this);
+	}
+
+
 	//创建CPU核心数两倍的工作线程
 	for (int i = 0; i!= work_num; i++)
 	{
 		workgroup[i] = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Work_Model, this, NULL, NULL);
 	}
+
 	//等待工作线程返回
 	for (int i = 0; i != work_num; i++)
 	{
@@ -120,9 +176,9 @@ Server_Box::Server_Box()
 {
 	//服务器状态为关闭
 	isopen = false;
-	//网络环境未初始化
+	//初始化网络环境
 	lpwsadata = nullptr;
-
+	//
 	buffer_cmd = nullptr;
 }
 
@@ -130,7 +186,6 @@ Server_Box::~Server_Box()
 {
 	//关闭服务器
 	isopen = false;
-
 	//清理申请内存
 	if (lpwsadata != nullptr) delete lpwsadata;
 
