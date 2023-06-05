@@ -13,6 +13,7 @@ enum IO_TYPE
 
 //重叠结构体
 typedef struct IO_DATA {
+
 	OVERLAPPED Overlapped;
 	SOCKET socket;
 	IO_TYPE type;

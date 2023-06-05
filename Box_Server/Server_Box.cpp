@@ -51,8 +51,13 @@ int Server_Box::init(const char* ip, const int port)
 	//开始监听
 	Check_ret(listen(listen_socket, SOMAXCONN), -1);
 
+	LPIO_DATA io_data = new IO_DATA{ 0 };
+	io_data->socket = listen_socket;
+	io_data->type = IO_ACCEPT;
+
+
 	//将socket绑定到IOCP
-	Check_ret(CreateIoCompletionPort((HANDLE)listen_socket, iocpHandle, 0, 0), NULL);
+	Check_ret(CreateIoCompletionPort((HANDLE)listen_socket, iocpHandle, (ULONG_PTR)io_data, 0), NULL);
 
 	//服务初始化完成
 	std::cout << "Server init complete" << std::endl;
@@ -67,14 +72,14 @@ inline int Server_Box::POST_ACCEPT(Server_Box* server_box)
 	Check_ret(tempsock, INVALID_SOCKET);
 
 	//设置重叠结构体
-	LPIO_DATA temp = new IO_DATA;
-	memset(temp, 0, sizeof(IO_DATA));
+	LPIO_DATA temp = new IO_DATA{ 0 };
 	temp->type = IO_ACCEPT;
 	temp->DataBuf.buf = temp->Buffer;
 	temp->DataBuf.len = sizeof(temp->Buffer);
+	temp->socket = tempsock;
 	DWORD lpdwBytesReceived = 0;
 	//绑定到listen_sock
-	if (AcceptEx(server_box->listen_socket, tempsock, temp->DataBuf.buf, TCP_MTU, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &lpdwBytesReceived, &temp->Overlapped) == FALSE)
+	if (AcceptEx(server_box->listen_socket, temp->socket, temp->DataBuf.buf, TCP_MTU, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &lpdwBytesReceived, &temp->Overlapped) == FALSE)
 	{
 		if (GetLastError() != WSA_IO_PENDING)
 		{
@@ -91,16 +96,16 @@ inline int Server_Box::POST_ACCEPT(Server_Box* server_box)
 int Server_Box::Work_Model(Server_Box* server_box)
 {
 
-	DWORD IO_SIZE;
+	DWORD IO_SIZE = 0;
 	//创建重叠结构体指针
-	void* lpCompletionKey=nullptr;
+	LPIO_DATA lpCompletionKey=nullptr;
 	//重叠结构体
-	LPIO_DATA lpOverlapped;
+	LPIO_DATA lpOverlapped=nullptr;
 	
 
 	while (server_box->isopen)
 	{
-		bool res = GetQueuedCompletionStatus(server_box->iocpHandle, &IO_SIZE, (PULONG_PTR)lpCompletionKey, (LPOVERLAPPED*)&lpOverlapped, INFINITE);
+		BOOL res = GetQueuedCompletionStatus(server_box->iocpHandle, &IO_SIZE, (PULONG_PTR)lpCompletionKey, (LPOVERLAPPED*)&lpOverlapped, INFINITE);
 		if (!res)
 		{
 			if (GetLastError() == WAIT_TIMEOUT || GetLastError() == ERROR_NETNAME_DELETED)
@@ -109,10 +114,20 @@ int Server_Box::Work_Model(Server_Box* server_box)
 				continue;
 			}
 		}
+		CONTAINING_RECORD
+		if (IO_SIZE==0)
+		{
+			std::cout << "IO_SIZE==0" << GetLastError() << std::endl;
+		}
+
 		if (lpOverlapped == nullptr)
 		{
+			std::cout << "skip" << std::endl;
 			continue;
 		}
+
+		
+
 		switch (lpOverlapped->type)
 		{
 		case IO_ACCEPT:
@@ -137,7 +152,7 @@ int Server_Box::Work_Model(Server_Box* server_box)
 			break;
 		}
 
-		Sleep(10);
+		Sleep(100);
 	}
 
 
