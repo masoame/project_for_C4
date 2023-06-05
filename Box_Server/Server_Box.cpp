@@ -149,6 +149,9 @@ int Server_Box::run()
 	isopen = true;
 
 	int work_num = sys_info.dwNumberOfProcessors * 2;
+
+	std::cout << "CPU核心数为" << sys_info.dwNumberOfProcessors << std::endl;
+
 	HANDLE* workgroup = new HANDLE[work_num];
 
 	//投递SOCKET等待connect
