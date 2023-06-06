@@ -19,6 +19,7 @@ int Basic_Server::Cmd_Model(Basic_Server* basic_server)
 }
 
 
+
 int Basic_Server::init(const char* ip, const int port)
 {
 	isopen = true;

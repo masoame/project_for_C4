@@ -46,7 +46,6 @@ private:
 	HANDLE iocpHandle;
 
 
-
 	//管理员输入字符缓存区域
 	char* buffer_cmd;
 
@@ -54,21 +53,11 @@ public:
 
 	//-----------------------FUCTION---------------------------
 private:
-	////监听模块
-	//static int Listen_Model(Server_Box* server_box);
+
 	//客户端命令模块
 	static int Cmd_Model(Basic_Server* server_box);
 
-	////发送(异步发送)
-	//static int AsyncSend(Server_Box* server_box, SOCKET target, void* file, uint16_t len);
-	////发送(非异步发送)
-	//static int Send(Server_Box* server_box, SOCKET target, void* file, uint16_t len);
-	////发送模块
-	//static int Send_Model(Server_Box* server_box);
-	////接收模块
-	//static int Recv_Model(Server_Box* server_box);
 
-	//POST_ACCEPT
 
 	//投递ACCEPT
 	static int POST_ACCEPT(Basic_Server* server_box);
