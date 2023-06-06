@@ -105,7 +105,7 @@ int Server_Box::Work_Model(Server_Box* server_box)
 
 	while (server_box->isopen)
 	{
-		BOOL res = GetQueuedCompletionStatus(server_box->iocpHandle, &IO_SIZE, (PULONG_PTR)lpCompletionKey, (LPOVERLAPPED*)&lpOverlapped, INFINITE);
+		BOOL res = GetQueuedCompletionStatus(server_box->iocpHandle, &IO_SIZE, (PULONG_PTR)&lpCompletionKey, (LPOVERLAPPED*)&lpOverlapped, INFINITE);
 		if (!res)
 		{
 			if (GetLastError() == WAIT_TIMEOUT || GetLastError() == ERROR_NETNAME_DELETED)
@@ -114,10 +114,10 @@ int Server_Box::Work_Model(Server_Box* server_box)
 				continue;
 			}
 		}
-		
+		 
 		if (IO_SIZE==0)
 		{
-			std::cout << "IO_SIZE==0" << GetLastError() << std::endl;
+			std::cout << "IO_SIZE == 0" << GetLastError() << std::endl;
 		}
 
 		if (lpOverlapped == nullptr)
