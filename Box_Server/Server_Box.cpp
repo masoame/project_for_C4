@@ -114,7 +114,7 @@ int Server_Box::Work_Model(Server_Box* server_box)
 				continue;
 			}
 		}
-		CONTAINING_RECORD
+		
 		if (IO_SIZE==0)
 		{
 			std::cout << "IO_SIZE==0" << GetLastError() << std::endl;
