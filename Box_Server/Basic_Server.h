@@ -23,8 +23,8 @@ typedef struct IO_DATA {
 } IO_DATA, * LPIO_DATA;
 
 
-//盒子服务器
-class Server_Box
+//服务器基类
+class Basic_Server
 {
 	//-----------------------VALUE-----------------------------
 private:
@@ -45,28 +45,6 @@ private:
 
 	HANDLE iocpHandle;
 
-	//发送队列类
-	class SEND_QUEUE {
-
-	private:
-		//互斥量
-		std::mutex mtx;
-		//队列本体
-		std::queue<char*> _queue;
-
-	public:
-
-		enum FLAG
-		{
-			isempty, front, push, pop
-		};
-
-		//事件操作
-		void* action(FLAG = isempty, char* data = nullptr);
-
-	}send_queue;
-
-	//发送队列
 
 
 	//管理员输入字符缓存区域
@@ -79,7 +57,7 @@ private:
 	////监听模块
 	//static int Listen_Model(Server_Box* server_box);
 	//客户端命令模块
-	static int Cmd_Model(Server_Box* server_box);
+	static int Cmd_Model(Basic_Server* server_box);
 
 	////发送(异步发送)
 	//static int AsyncSend(Server_Box* server_box, SOCKET target, void* file, uint16_t len);
@@ -90,12 +68,16 @@ private:
 	////接收模块
 	//static int Recv_Model(Server_Box* server_box);
 
-	//
+	//POST_ACCEPT
+
+	//投递ACCEPT
+	static int POST_ACCEPT(Basic_Server* server_box);
+	//处理ACCEPT请求
+	static int DO_ACCEPT(Basic_Server* server_box);
 	
-	//增加投递处理模块
-	static int POST_ACCEPT(Server_Box* server_box);
+
 	//工作线程
-	static int Work_Model(Server_Box* server_box);
+	static int Work_Model(Basic_Server* server_box);
 public:
 	//初始化服务器(默认监听端口为0x0721)
 	int init(const char* ip = "0.0.0.0", const int port = 0x0721);
@@ -106,13 +88,13 @@ public:
 	//-------------------------CLASS----------------------------
 
 	//构造函数
-	Server_Box();
+	Basic_Server();
 
 	//析构函数
-	~Server_Box();
+	~Basic_Server();
 
 	//禁止拷贝复制，禁止拷贝构造
-	Server_Box& operator=(const Server_Box&) = delete;
-	Server_Box(const Server_Box&) = delete;
-	Server_Box(const Server_Box&&) = delete;
+	Basic_Server& operator=(const Basic_Server&) = delete;
+	Basic_Server(const Basic_Server&) = delete;
+	Basic_Server(const Basic_Server&&) = delete;
 };

@@ -1,8 +1,8 @@
-﻿#include"Server_Box.h"
+﻿#include"basic_server.h"
 
 void main()
 {
-	Server_Box server;
+	Basic_Server server;
 	server.init();
 	server.run();
 }

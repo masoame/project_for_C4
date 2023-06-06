@@ -1,16 +1,16 @@
-﻿#include"Server_Box.h"
+﻿#include"Basic_Server.h"
 
 
-int Server_Box::Cmd_Model(Server_Box* server_box)
+int Basic_Server::Cmd_Model(Basic_Server* basic_server)
 {
-	while (server_box->isopen)
+	while (basic_server->isopen)
 	{
-		std::cin >> server_box->buffer_cmd;
+		std::cin >> basic_server->buffer_cmd;
 
-		if (strcmp(server_box->buffer_cmd, "#quit") == 0)
+		if (strcmp(basic_server->buffer_cmd, "#quit") == 0)
 		{
 			//shutdown(server_box->listen_socket, SD_BOTH);
-			server_box->isopen = false;
+			basic_server->isopen = false;
 			std::cout << "服务器关闭..." << std::endl;
 			exit(-1);
 		}
@@ -19,7 +19,7 @@ int Server_Box::Cmd_Model(Server_Box* server_box)
 }
 
 
-int Server_Box::init(const char* ip, const int port)
+int Basic_Server::init(const char* ip, const int port)
 {
 	isopen = true;
 
@@ -65,7 +65,7 @@ int Server_Box::init(const char* ip, const int port)
 	return 0;
 }
 
-inline int Server_Box::POST_ACCEPT(Server_Box* server_box)
+inline int Basic_Server::POST_ACCEPT(Basic_Server* basic_server)
 {
 	//先创建好SOCKET
 	SOCKET tempsock = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, NULL, WSA_FLAG_OVERLAPPED);
@@ -79,7 +79,7 @@ inline int Server_Box::POST_ACCEPT(Server_Box* server_box)
 	temp->socket = tempsock;
 	DWORD lpdwBytesReceived = 0;
 	//绑定到listen_sock
-	if (AcceptEx(server_box->listen_socket, temp->socket, temp->DataBuf.buf, TCP_MTU, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &lpdwBytesReceived, &temp->Overlapped) == FALSE)
+	if (AcceptEx(basic_server->listen_socket, temp->socket, temp->DataBuf.buf, TCP_MTU, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &lpdwBytesReceived, &temp->Overlapped) == FALSE)
 	{
 		if (GetLastError() != WSA_IO_PENDING)
 		{
@@ -87,13 +87,19 @@ inline int Server_Box::POST_ACCEPT(Server_Box* server_box)
 			return false;
 		}
 	}
+	basic_server->BOX_SOCK.insert(temp);
 
+	return 0;
+}
+
+int Basic_Server::DO_ACCEPT(Basic_Server* basic_server)
+{
 
 	return 0;
 }
 
 //工作模块
-int Server_Box::Work_Model(Server_Box* server_box)
+int Basic_Server::Work_Model(Basic_Server* basic_server)
 {
 
 	DWORD IO_SIZE = 0;
@@ -103,9 +109,9 @@ int Server_Box::Work_Model(Server_Box* server_box)
 	LPIO_DATA lpOverlapped=nullptr;
 	
 
-	while (server_box->isopen)
+	while (basic_server->isopen)
 	{
-		BOOL res = GetQueuedCompletionStatus(server_box->iocpHandle, &IO_SIZE, (PULONG_PTR)&lpCompletionKey, (LPOVERLAPPED*)&lpOverlapped, INFINITE);
+		BOOL res = GetQueuedCompletionStatus(basic_server->iocpHandle, &IO_SIZE, (PULONG_PTR)&lpCompletionKey, (LPOVERLAPPED*)&lpOverlapped, INFINITE);
 		if (!res)
 		{
 			if (GetLastError() == WAIT_TIMEOUT || GetLastError() == ERROR_NETNAME_DELETED)
@@ -114,25 +120,13 @@ int Server_Box::Work_Model(Server_Box* server_box)
 				continue;
 			}
 		}
-		 
-		if (IO_SIZE==0)
-		{
-			std::cout << "IO_SIZE == 0" << GetLastError() << std::endl;
-		}
-
-		if (lpOverlapped == nullptr)
-		{
-			std::cout << "skip" << std::endl;
-			continue;
-		}
-
-		
 
 		switch (lpOverlapped->type)
 		{
 		case IO_ACCEPT:
-
-			std::cout << "连接请求收到" << std::endl;
+			
+			lpOverlapped->type = IO_RECV;
+			Check_ret(CreateIoCompletionPort((HANDLE)lpOverlapped->socket, basic_server->iocpHandle, (ULONG_PTR)lpOverlapped, 0), NULL);
 
 			break;
 		case IO_DISCONNECT:
@@ -151,15 +145,13 @@ int Server_Box::Work_Model(Server_Box* server_box)
 
 			break;
 		}
-
-		Sleep(100);
 	}
-
 
 	return 0;
 }
 
-int Server_Box::run()
+//启动
+int Basic_Server::run()
 {
 	isopen = true;
 
@@ -190,7 +182,7 @@ int Server_Box::run()
 	return 0;
 }
 
-Server_Box::Server_Box()
+Basic_Server::Basic_Server()
 {
 	//服务器状态为关闭
 	isopen = false;
@@ -200,7 +192,7 @@ Server_Box::Server_Box()
 	buffer_cmd = nullptr;
 }
 
-Server_Box::~Server_Box()
+Basic_Server::~Basic_Server()
 {
 	//关闭服务器
 	isopen = false;

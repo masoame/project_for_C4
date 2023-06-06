@@ -131,11 +131,11 @@
   <ItemGroup>
     <ClCompile Include="DLLMain.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Server_Box.cpp" />
+    <ClCompile Include="Basic_Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_protocol_.h" />
-    <ClInclude Include="Server_Box.h" />
+    <ClInclude Include="Basic_Server.h" />
     <ClInclude Include="_define_.h" />
     <ClInclude Include="_stdlib_.h" />
   </ItemGroup>

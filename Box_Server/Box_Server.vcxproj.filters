@@ -18,7 +18,7 @@
     <ClCompile Include="DLLMain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Server_Box.cpp">
+    <ClCompile Include="Basic_Server.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
@@ -26,7 +26,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Server_Box.h">
+    <ClInclude Include="Basic_Server.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="_define_.h">
