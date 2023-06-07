@@ -49,30 +49,31 @@ private:
 	//管理员输入字符缓存区域
 	char* buffer_cmd;
 
-public:
-
 	//-----------------------FUCTION---------------------------
 private:
 
 	//客户端命令模块
 	static int Cmd_Model(Basic_Server* server_box);
 
-
-
 	//投递ACCEPT
 	static int POST_ACCEPT(Basic_Server* server_box);
-	//处理ACCEPT请求
-	static int DO_ACCEPT(Basic_Server* server_box);
-	
 
+	//处理ACCEPT请求
+	static int DO_ACCEPT(Basic_Server* server_box, LPIO_DATA io_data);
+
+	//
+	static int POST_RECV(Basic_Server* server_box, LPIO_DATA io_data);
+
+	
 	//工作线程
 	static int Work_Model(Basic_Server* server_box);
 public:
+
 	//初始化服务器(默认监听端口为0x0721)
-	int init(const char* ip = "0.0.0.0", const int port = 0x0721);
+	virtual int init(const char* ip = "0.0.0.0", const int port = 0x0721);
 
 	//开始服务器
-	int run();
+	virtual int run();
 
 	//-------------------------CLASS----------------------------
 

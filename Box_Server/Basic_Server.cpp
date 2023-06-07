@@ -93,10 +93,36 @@ inline int Basic_Server::POST_ACCEPT(Basic_Server* basic_server)
 	return 0;
 }
 
-int Basic_Server::DO_ACCEPT(Basic_Server* basic_server)
+int Basic_Server::DO_ACCEPT(Basic_Server* basic_server, LPIO_DATA io_data)
 {
+	sockaddr_in* Localaddr = nullptr, * Remoteaddr = nullptr;
+	int LocaladdrLength = sizeof(sockaddr_in), RemoteaddrLength = sizeof(sockaddr_in);
+	GetAcceptExSockaddrs(io_data->DataBuf.buf, TCP_MTU, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, (sockaddr**)&Localaddr, &LocaladdrLength, (sockaddr**)&Remoteaddr, &RemoteaddrLength);
 
+	std::cout << "验证信息: " << io_data->DataBuf.buf << std::endl;
+
+	io_data->type = IO_RECV;
+
+	Check_ret(CreateIoCompletionPort((HANDLE)io_data->socket, basic_server->iocpHandle, (ULONG_PTR) & io_data, 0) ,NULL);
+
+	POST_RECV(basic_server, io_data);
+	
 	return 0;
+}
+
+int Basic_Server::POST_RECV(Basic_Server* server_box, LPIO_DATA io_data)
+{
+	DWORD dwFlags = 0;
+	DWORD dwBytes = 0;
+
+	if ((WSARecv(io_data->socket, &io_data->DataBuf, 1, &dwBytes, &dwFlags, &io_data->Overlapped, NULL) == SOCKET_ERROR) && WSAGetLastError() != WSA_IO_PENDING)
+	{
+		std::cout << "接收绑定错误" << std::endl;
+
+		return false;
+	}
+
+	return true;
 }
 
 //工作模块
@@ -126,8 +152,7 @@ int Basic_Server::Work_Model(Basic_Server* basic_server)
 		{
 		case IO_ACCEPT:
 			
-			lpOverlapped->type = IO_RECV;
-			Check_ret(CreateIoCompletionPort((HANDLE)lpOverlapped->socket, basic_server->iocpHandle, (ULONG_PTR)lpOverlapped, 0), NULL);
+			DO_ACCEPT(basic_server, lpOverlapped);
 
 			break;
 		case IO_DISCONNECT:
