@@ -19,6 +19,8 @@ int main(int argc, char* argv[])
 	strcpy(buffer, "please server send client");
 	std::cout << send(server_sock, buffer, strlen(buffer) + 1, 0);
 
+
+	std::cout << send(server_sock, "buffer", 7, 0);
 	close(server_sock);
 	return 0;
 }

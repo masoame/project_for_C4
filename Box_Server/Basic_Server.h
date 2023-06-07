@@ -61,7 +61,7 @@ private:
 	//处理ACCEPT请求
 	static int DO_ACCEPT(Basic_Server* server_box, LPIO_DATA io_data);
 
-	//
+	//投递RECV
 	static int POST_RECV(Basic_Server* server_box, LPIO_DATA io_data);
 
 	

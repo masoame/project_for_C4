@@ -162,7 +162,9 @@ int Basic_Server::Work_Model(Basic_Server* basic_server)
 			break;
 		case IO_RECV:
 
-
+			std::cout << lpOverlapped->DataBuf.buf << std::endl;
+			memset(&lpOverlapped->Overlapped, 0, sizeof(lpOverlapped->Overlapped));
+			POST_RECV(basic_server, lpOverlapped);
 
 			break;
 		case IO_SEND:
