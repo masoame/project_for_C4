@@ -1,22 +1,23 @@
-ï»¿#pragma once
+#include"Basic_Server.h"
+#pragma once
 #include"_stdlib_.h"
 
 struct Send
 {
-	//å‘é€ç›®æ ‡çš„å¥—æ¥å­—
+	//·¢ËÍÄ¿±êµÄÌ×½Ó×Ö
 	SOCKET target_sock;
-	//åŒºå·
+	//ÇøºÅ
 	uint16_t Area;
-	//ç»„å·
+	//×éºÅ
 	uint64_t Group;
-	//å¤§å°(å–TCP_MTUç›¸å…³)
+	//´óĞ¡(È¡TCP_MTUÏà¹Ø)
 	uint64_t Size;
 };
 
-//è‡ªå®šä¹‰åè®®
+//×Ô¶¨ÒåĞ­Òé
 struct DIY_protocol
 {
-	//å›ºå®šæ•°å­—(ä¸å¯æ”¹å˜)
+	//¹Ì¶¨Êı×Ö(²»¿É¸Ä±ä)
 	const uint16_t DIY = 0xffee;
 
 	PROCTOCOL_CTRL CTRL;
@@ -24,16 +25,29 @@ struct DIY_protocol
 
 enum PROCTOCOL_CTRL
 {
-	//å¾…æœº
+	//´ı»ú
 	WAIT = 0x0000,
-	//å¼ºè¡Œåœæ­¢
+	//Ç¿ĞĞÍ£Ö¹
 	STOP = 0x0001,
-	//æœ—è¯»
+	//ÀÊ¶Á
 	READ = 0x0002,
-	//äº¤æµ
+	//½»Á÷
 	DISALOGUE = 0x0004,
 
-	//ä¿ç•™UDPè¿æ¥ä½¿ç”¨
+	//±£ÁôUDPÁ¬½ÓÊ¹ÓÃ
 	PACKAGE_READ = 0x0008,
 	PACKAGE_DISALOGUE = 0x0010
 };
+class Server_box : Basic_Server
+{
+public:
+
+	
+
+	Server_box();
+	~Server_box();
+
+private:
+
+};
+

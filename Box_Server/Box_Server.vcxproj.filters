@@ -24,6 +24,9 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="server_box.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Basic_Server.h">
@@ -35,7 +38,7 @@
     <ClInclude Include="_stdlib_.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="_protocol_.h">
+    <ClInclude Include="server_box.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

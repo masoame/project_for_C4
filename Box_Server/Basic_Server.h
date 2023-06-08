@@ -38,7 +38,7 @@ private:
 	sockaddr_in listen_adress;
 
 	//存放重叠结构体
-	std::set<LPIO_DATA> BOX_SOCK;
+	std::set<LPIO_DATA> BOX_GROUP;
 
 	//CPU核数
 	SYSTEM_INFO sys_info;
@@ -70,7 +70,7 @@ private:
 public:
 
 	//初始化服务器(默认监听端口为0x0721)
-	virtual int init(const char* ip = "0.0.0.0", const int port = 0x0721);
+	virtual inline int init(const char* ip = "0.0.0.0", const int port = 0x0721);
 
 	//开始服务器
 	virtual int run();

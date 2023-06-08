@@ -21,6 +21,9 @@ int main(int argc, char* argv[])
 
 
 	std::cout << send(server_sock, "buffer", 7, 0);
+
+	getchar();
+
 	close(server_sock);
 	return 0;
 }
