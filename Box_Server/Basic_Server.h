@@ -10,7 +10,6 @@ enum IO_TYPE
 	IO_DISCONNECT
 };
 
-
 //重叠结构体
 typedef struct IO_DATA {
 
@@ -29,54 +28,57 @@ class Basic_Server
 	//-----------------------VALUE-----------------------------
 private:
 	//服务器是否开启
-	bool isopen;
+	bool isopen = false;
 	//window自带
-	LPWSADATA lpwsadata;
+	LPWSADATA lpwsadata = nullptr;
 	//监听套接字
-	SOCKET listen_socket;
+	SOCKET listen_socket = SOCKET_ERROR;
 	//监听地址
-	sockaddr_in listen_adress;
+	sockaddr_in listen_adress = { 0 };
 
 	//存放重叠结构体
 	std::set<LPIO_DATA> BOX_GROUP;
 
 	//CPU核数
-	SYSTEM_INFO sys_info;
+	SYSTEM_INFO sys_info = { 0 };
 
-	HANDLE iocpHandle;
+	HANDLE iocpHandle = nullptr;
 
 
 	//管理员输入字符缓存区域
-	char* buffer_cmd;
+	char* buffer_cmd = nullptr;
 
 	//-----------------------FUCTION---------------------------
-private:
+public:
 
 	//客户端命令模块
-	static int Cmd_Model(Basic_Server* server_box);
+	virtual int Cmd_Model() ;
 
 	//投递ACCEPT
-	static int POST_ACCEPT(Basic_Server* server_box);
+	int POST_ACCEPT();
 
 	//处理ACCEPT请求
-	static int DO_ACCEPT(Basic_Server* server_box, LPIO_DATA io_data);
+	int DO_ACCEPT(LPIO_DATA io_data);
 
 	//投递RECV
-	static int POST_RECV(Basic_Server* server_box, LPIO_DATA io_data);
+	int POST_RECV(LPIO_DATA io_data);
 
 	
 	//工作线程
-	static int Work_Model(Basic_Server* server_box);
-public:
+	virtual int Work_Model();
 
 	//初始化服务器(默认监听端口为0x0721)
-	virtual inline int init(const char* ip = "0.0.0.0", const int port = 0x0721);
+	virtual int init(const char* ip = "0.0.0.0", const int port = 0x0721);
 
 	//开始服务器
 	virtual int run();
 
-	//-------------------------CLASS----------------------------
+private: 
+	static int static_Work_Model(Basic_Server* basic_server);
 
+
+	//-------------------------CLASS----------------------------
+public: 
 	//构造函数
 	Basic_Server();
 

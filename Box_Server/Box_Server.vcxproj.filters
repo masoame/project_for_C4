@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DLLMain.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Basic_Server.cpp">
       <Filter>源文件</Filter>
     </ClCompile>

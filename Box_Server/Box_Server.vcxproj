@@ -129,7 +129,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DLLMain.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Basic_Server.cpp" />
     <ClCompile Include="server_box.cpp" />

@@ -20,7 +20,7 @@ struct DIY_protocol
 	//固定数字(不可改变)
 	const uint16_t DIY = 0xffee;
 
-	PROCTOCOL_CTRL CTRL;
+	//PROCTOCOL_CTRL CTRL;
 };
 
 enum PROCTOCOL_CTRL
@@ -38,16 +38,5 @@ enum PROCTOCOL_CTRL
 	PACKAGE_READ = 0x0008,
 	PACKAGE_DISALOGUE = 0x0010
 };
-class Server_box : Basic_Server
-{
-public:
 
-	
-
-	Server_box();
-	~Server_box();
-
-private:
-
-};
 
