@@ -18,7 +18,12 @@ int linkserver()
 	std::cout << send(server_sock, buffer, strlen(buffer) + 1, 0);
 
 
-	std::cout << send(server_sock, "buffer", 7, 0);
+	std::cout << send(server_sock, "buffer", 7, 0) << std::endl;
+
+	int len = 1024;
+	recv(server_sock, buffer, len, 0);
+
+	std::cout << buffer << std::endl;
 
 	getchar();
 
@@ -28,7 +33,7 @@ int linkserver()
 
 int main(int argc, char* argv[])
 {
-
+	linkserver();
 	system("play test.mp3");
 	std::cout << "play end;" << std::endl;
 

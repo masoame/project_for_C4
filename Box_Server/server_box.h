@@ -39,4 +39,7 @@ enum PROCTOCOL_CTRL
 	PACKAGE_DISALOGUE = 0x0010
 };
 
-
+class server_box :public Basic_Server
+{
+	int POST_RECV(LPIO_DATA io_data);
+};

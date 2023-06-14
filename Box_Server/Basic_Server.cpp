@@ -108,7 +108,7 @@ int Basic_Server::DO_ACCEPT(LPIO_DATA io_data)
 	return 0;
 }
 
-int Basic_Server::POST_RECV(LPIO_DATA io_data)
+inline int Basic_Server::POST_RECV(LPIO_DATA io_data)
 {
 	DWORD dwFlags = 0;
 	DWORD dwBytes = 0;
@@ -203,6 +203,9 @@ int Basic_Server::run()
 
 	HANDLE* workgroup = new HANDLE[work_num];
 
+	HANDLE cmd = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)static_Cmd_Model, this, NULL, NULL);
+
+
 	//投递SOCKET等待connect
 	for (int i = 0; i != work_num; i++)
 	{
@@ -220,14 +223,28 @@ int Basic_Server::run()
 	{
 		WaitForSingleObject(workgroup[i], INFINITE);
 	}
+
+
+	WaitForSingleObject(cmd, INFINITE);
+
 	return 0;
 }
 
-int Basic_Server::static_Work_Model(Basic_Server* basic_server)
+inline int Basic_Server::static_Work_Model(Basic_Server* basic_server)
 {
 	return basic_server->Work_Model();
 }
 
+inline int Basic_Server::static_Cmd_Model(Basic_Server* basic_server)
+{
+	return basic_server->Cmd_Model();
+}
+
+
+Basic_Server::Basic_Server()
+{
+	buffer_cmd = new char[1024];
+}
 
 Basic_Server::~Basic_Server()
 {

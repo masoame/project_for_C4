@@ -52,7 +52,7 @@ private:
 public:
 
 	//客户端命令模块
-	virtual int Cmd_Model() ;
+	virtual int Cmd_Model();
 
 	//投递ACCEPT
 	int POST_ACCEPT();
@@ -61,7 +61,7 @@ public:
 	int DO_ACCEPT(LPIO_DATA io_data);
 
 	//投递RECV
-	int POST_RECV(LPIO_DATA io_data);
+	virtual int POST_RECV(LPIO_DATA io_data);
 
 	
 	//工作线程
@@ -77,9 +77,12 @@ private:
 
 	static int static_Work_Model(Basic_Server* basic_server);
 
-
+	static int static_Cmd_Model(Basic_Server* basic_server);
 	//-------------------------CLASS----------------------------
 public: 
+
+	//构造函数
+	Basic_Server();
 
 	//析构函数
 	virtual ~Basic_Server();

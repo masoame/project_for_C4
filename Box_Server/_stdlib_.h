@@ -1,9 +1,7 @@
 ﻿#pragma once
 #include"_define_.h"
-#include<thread>
-#include<queue>
-#include<set>
 #include<iostream>
+#include<set>
 #include<mutex>
 #include<WinSock2.h>
 #include <WS2tcpip.h>
