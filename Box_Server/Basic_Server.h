@@ -74,6 +74,7 @@ public:
 	virtual int run();
 
 private: 
+
 	static int static_Work_Model(Basic_Server* basic_server);
 
 
