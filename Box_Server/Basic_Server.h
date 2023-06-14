@@ -79,11 +79,9 @@ private:
 
 	//-------------------------CLASS----------------------------
 public: 
-	//构造函数
-	Basic_Server();
 
 	//析构函数
-	~Basic_Server();
+	virtual ~Basic_Server();
 
 	//禁止拷贝复制，禁止拷贝构造
 	Basic_Server& operator=(const Basic_Server&) = delete;

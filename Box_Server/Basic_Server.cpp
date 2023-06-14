@@ -97,14 +97,14 @@ int Basic_Server::DO_ACCEPT(LPIO_DATA io_data)
 	int LocaladdrLength = sizeof(sockaddr_in), RemoteaddrLength = sizeof(sockaddr_in);
 	GetAcceptExSockaddrs(io_data->DataBuf.buf, TCP_MTU, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, (sockaddr**)&Localaddr, &LocaladdrLength, (sockaddr**)&Remoteaddr, &RemoteaddrLength);
 
+
+	std::cout << "收到来自ip: " << inet_ntoa(Remoteaddr->sin_addr) << " port: " << ntohs(Remoteaddr->sin_port) << std::endl;
 	std::cout << "验证信息: " << io_data->DataBuf.buf << std::endl;
 
+
 	io_data->type = IO_RECV;
-
 	Check_ret(CreateIoCompletionPort((HANDLE)io_data->socket, iocpHandle, (ULONG_PTR) & io_data, 0) ,NULL);
-
 	POST_RECV(io_data);
-	
 	return 0;
 }
 
@@ -228,10 +228,6 @@ int Basic_Server::static_Work_Model(Basic_Server* basic_server)
 	return basic_server->Work_Model();
 }
 
-Basic_Server::Basic_Server()
-{
-
-}
 
 Basic_Server::~Basic_Server()
 {

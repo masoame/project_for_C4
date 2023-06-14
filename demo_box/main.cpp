@@ -2,18 +2,16 @@
 
 char buffer[1024] = { 0 };
 
-int main(int argc, char* argv[])
+int linkserver()
 {
 	int server_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	//服务器地址
 	sockaddr_in server_addr;
-
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = inet_addr("192.168.137.1");
 	server_addr.sin_port = ntohs(0x0721);
 
-	std::cout << connect(server_sock, (sockaddr*)&server_addr, sizeof(sockaddr)) << std::endl;
+	if (connect(server_sock, (sockaddr*)&server_addr, sizeof(sockaddr)) != 0) return false;
 
 
 	strcpy(buffer, "please server send client");
@@ -25,5 +23,14 @@ int main(int argc, char* argv[])
 	getchar();
 
 	close(server_sock);
+}
+
+
+int main(int argc, char* argv[])
+{
+
+	system("play test.mp3");
+	std::cout << "play end;" << std::endl;
+
 	return 0;
 }
