@@ -1,43 +1,37 @@
 #include"Basic_Server.h"
 #pragma once
 #include"_stdlib_.h"
-
-struct Send
-{
-	//发送目标的套接字
-	SOCKET target_sock;
-	//区号
-	uint16_t Area;
-	//组号
-	uint64_t Group;
-	//大小(取TCP_MTU相关)
-	uint64_t Size;
-};
-
-//自定义协议
-struct DIY_protocol
-{
-	//固定数字(不可改变)
-	const uint16_t DIY = 0xffee;
-
-	//PROCTOCOL_CTRL CTRL;
-};
-
-enum PROCTOCOL_CTRL
+enum status
 {
 	//待机
 	WAIT = 0x0000,
-	//强行停止
+	//停止
 	STOP = 0x0001,
 	//朗读
 	READ = 0x0002,
 	//交流
 	DISALOGUE = 0x0004,
 
-	//保留UDP连接使用
-	PACKAGE_READ = 0x0008,
-	PACKAGE_DISALOGUE = 0x0010
 };
+//自定义协议
+typedef struct Head_code
+{
+	//固定数字(不可改变)
+	const uint16_t DIY = 0xffee;
+
+	//语音盒状态(默认)
+	status target = WAIT;
+
+	//组号(无组号则为-1)
+	uint32_t group_num;
+
+	//包大小
+	uint16_t size;
+
+
+}Head_code, * LPHead_code;
+
+
 
 class server_box :public Basic_Server
 {

@@ -1,41 +1,40 @@
-Ôªø#include"_stdlib_.h"
-
-char buffer[1024] = { 0 };
-
-int linkserver()
-{
-	int server_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-
-	sockaddr_in server_addr;
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = inet_addr("192.168.137.1");
-	server_addr.sin_port = ntohs(0x0721);
-
-	if (connect(server_sock, (sockaddr*)&server_addr, sizeof(sockaddr)) != 0) return false;
-
-
-	strcpy(buffer, "please server send client");
-	std::cout << send(server_sock, buffer, strlen(buffer) + 1, 0);
-
-
-	std::cout << send(server_sock, "buffer", 7, 0) << std::endl;
-
-	int len = 1024;
-	recv(server_sock, buffer, len, 0);
-
-	std::cout << buffer << std::endl;
-
-	getchar();
-
-	close(server_sock);
-}
-
-
+#include"Client_Box.h"
 int main(int argc, char* argv[])
 {
-	linkserver();
-	system("play test.mp3");
-	std::cout << "play end;" << std::endl;
+	Client_Box client;
+	//¡¨Ω”∑˛ŒÒ∆˜
+	int sockserver = client.linkserver();
+
+	int ret;
+	while (ret = recv(sockserver, client.buffer, TCP_MTU, 0))
+	{
+		// ∂±∞¸≤ª∂‘∂™∆˙ ˝æ›∞¸
+		if (client.buf->DIY != 0xffee) continue;
+
+		switch (client.buf->target)
+		{
+			//µ± ’µΩ∂¡√¸¡Ó
+		case READ:
+			//“Ï≤Ω¥¥Ω®ª∫¥Ê≤€
+
+			groove.detach();
+
+			//
+
+
+
+
+
+		}
+
+
+
+
+	}
+
+	MakeFile("test.wav", "≤‚ ‘", 7);
+	MakeFile("test.wav", "err≤‚ ‘", 10);
+
 
 	return 0;
 }

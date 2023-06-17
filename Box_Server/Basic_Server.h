@@ -5,9 +5,7 @@
 enum IO_TYPE
 {
 	IO_ACCEPT,
-	IO_RECV,
-	IO_SEND,
-	IO_DISCONNECT
+	IO_RECV
 };
 
 //重叠结构体
@@ -78,6 +76,7 @@ private:
 	static int static_Work_Model(Basic_Server* basic_server);
 
 	static int static_Cmd_Model(Basic_Server* basic_server);
+
 	//-------------------------CLASS----------------------------
 public: 
 

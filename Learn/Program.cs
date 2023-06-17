@@ -1,6 +1,72 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
-foreach (string str in System.IO.File.ReadAllLines(@"D:\小说\无职转生\[理不尽な孫の手] 无职转生~到了異世界就拿出真本事~ [25][青年期 决战篇 下]\chapter3.html.txt", Encoding.Default))
+CommandLine cmd = new CommandLine();
+
+cmd.Write("Box_Server.exe");
+cmd.Write("#quita");
+
+
+public class CommandLine
 {
-    Console.WriteLine(str);                         // str就是每一行数据
+    private readonly Process process;
+
+    public delegate void onOutputHandler(CommandLine sender, string e);
+    public event onOutputHandler OutputHandler;
+
+    public CommandLine()
+    {
+        try
+        {
+            process = new Process()
+            {
+                StartInfo = new ProcessStartInfo("cmd.exe")
+                {
+                    Arguments = "/k",
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+            process.OutputDataReceived += Command_OutputDataReceived;
+            process.ErrorDataReceived += Command_ErrorDataReceived;
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+        }
+        catch (Exception e)
+        {
+            Trace.WriteLine(e.Message);
+        }
+    }
+
+    void Command_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+    {
+        OnOutput(e.Data);
+    }
+
+    void Command_OutputDataReceived(object sender, DataReceivedEventArgs e)
+    {
+        OnOutput(e.Data);
+    }
+
+    private void OnOutput(string data)
+    {
+        OutputHandler?.Invoke(this, data);
+    }
+
+    public void Write(string data)
+    {
+        try
+        {
+            process.StandardInput.WriteLine(data);
+        }
+        catch (Exception e)
+        {
+            Trace.WriteLine(e.Message);
+        }
+    }
 }
+

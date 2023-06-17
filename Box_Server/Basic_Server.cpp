@@ -7,11 +7,20 @@ int Basic_Server::Cmd_Model()
 	{
 		std::cin >> buffer_cmd;
 
-		if (strcmp(buffer_cmd, "#quit") == 0)
+		if (strcmp(buffer_cmd, "#quit;") == 0)
 		{
 			isopen = false;
 			std::cout << "服务器关闭..." << std::endl;
 			exit(-1);
+		}
+		if (strcmp(buffer_cmd, "#select") == 0)
+		{
+			
+			for (auto temp : BOX_GROUP)
+			{
+				std::cout << temp->socket << std::endl;
+			}
+
 		}
 	}
 	return 0;
@@ -124,9 +133,9 @@ int Basic_Server::Work_Model()
 
 	DWORD IO_SIZE = 0;
 	//创建重叠结构体指针
-	LPIO_DATA lpCompletionKey=nullptr;
+	LPIO_DATA lpCompletionKey = nullptr;
 	//重叠结构体
-	LPIO_DATA lpOverlapped=nullptr;
+	LPIO_DATA lpOverlapped = nullptr;
 	
 
 	while (isopen)
@@ -171,21 +180,14 @@ int Basic_Server::Work_Model()
 			DO_ACCEPT(lpOverlapped);
 
 			break;
-		case IO_DISCONNECT:
 
-
-
-			break;
 		case IO_RECV:
 
 			std::cout << lpOverlapped->Buffer << std::endl;	
 			POST_RECV(lpOverlapped);
 
 			break;
-		case IO_SEND:
 
-
-			break;
 		}
 	}
 

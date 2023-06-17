@@ -20,6 +20,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Client_Box.cpp">
+      <Filter>code</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>code</Filter>
     </ClCompile>

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
+using System.Text.RegularExpressions;
+
 namespace C4_Web.Controllers
 {
     public class HomeController : Controller
@@ -88,4 +90,88 @@ namespace C4_Web.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
+    class vits
+    {
+
+        private decimal LENGTHSCALE;
+        private decimal NOISESCALE;
+        private decimal NOISESCALEW;
+
+        CommandLine cmd;
+
+        public class CommandLine
+        {
+            private readonly Process process;
+
+            public delegate void onOutputHandler(CommandLine sender, string e);
+            public event onOutputHandler OutputHandler;
+
+            public CommandLine()
+            {
+                try
+                {
+                    process = new Process()
+                    {
+                        StartInfo = new ProcessStartInfo("cmd.exe")
+                        {
+                            Arguments = "/k",
+                            RedirectStandardInput = true,
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true,
+                            UseShellExecute = false,
+                            CreateNoWindow = true
+                        }
+                    };
+                    process.OutputDataReceived += Command_OutputDataReceived;
+                    process.ErrorDataReceived += Command_ErrorDataReceived;
+                    process.Start();
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e.Message);
+                }
+            }
+
+            void Command_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+            {
+                OnOutput(e.Data);
+            }
+
+            void Command_OutputDataReceived(object sender, DataReceivedEventArgs e)
+            {
+                OnOutput(e.Data);
+            }
+
+            private void OnOutput(string data)
+            {
+                OutputHandler?.Invoke(this, data);
+            }
+
+            public void Write(string data)
+            {
+                try
+                {
+                    process.StandardInput.WriteLine(data);
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e.Message);
+                }
+            }
+        }
+
+
+
+
+
+        private void TTS(string text, int speaker)
+        {
+            cmd.Write("t");
+            cmd.Write($"[LENGTH={LENGTHSCALE}][NOISE={NOISESCALE}][NOISEW={NOISESCALEW}]{Regex.Replace(text, @"\r?\n", " ")}");
+            cmd.Write(speaker.ToString());
+        }
+    }
+
 }
