@@ -15,12 +15,10 @@ int Basic_Server::Cmd_Model()
 		}
 		if (strcmp(buffer_cmd, "#select") == 0)
 		{
-			
 			for (auto temp : BOX_GROUP)
 			{
 				std::cout << temp->socket << std::endl;
 			}
-
 		}
 	}
 	return 0;

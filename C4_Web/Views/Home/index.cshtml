@@ -1,46 +1,103 @@
-<script src="https://eqcn.ajz.miesnfu.com/wp-content/plugins/wp-3d-pony/live2dw/lib/L2Dwidget.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录界面</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo</title>
+  <link href="../css/layui.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .demo-login-container{width: 320px; margin: 21px auto 0;}
+    .demo-login-other .layui-icon{position: relative; display: inline-block; margin: 0 2px; top: 2px; font-size: 26px;}
+    </style>
+</head>
+<body>
+  <ul class="layui-nav layui-bg-blue" lay-bar="disabled">
+    <li class="layui-nav-item"><a href="nav.html">VITS</a></li>
+    <li class="layui-nav-item"><a href="nav.html">菜单1</a></li>
+    <li class="layui-nav-item"><a href="nav.html">菜单2</a></li>
+    <li class="layui-nav-item">
+      <a href="javascript:;">更多</a>
+      <dl class="layui-nav-child">
+        <dd><a href="nav.html">选项1</a></dd>
+        <dd><a href="nav.html">选项2</a></dd>
+        <dd><a href="nav.html">选项3</a></dd>
+      </dl>
+    </li>
+    <li class="layui-nav-item"><a href="nav.html">菜单3</a></li>
+  </ul>
+  <form class="box">
+    <div class="container">
+
+        <div class="top">
+            <header>登录</header>
+        </div>
+
+        <div class="input-field">
+            <input type="text" class="input mgt" placeholder="用户名" id="">
+            <i class='bx bx-user' ></i>
+        </div>
+        <div class="input-field" >
+            <input type="Password" class="input mgt" placeholder="密码" id="">
+            <i class='bx bx-lock-alt'></i>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-row">
+            <div class="layui-col-xs7">
+              <div class="layui-input-wrap input-field">
+                <!-- <div class="layui-input-prefix">
+                  <i class="layui-icon layui-icon-vercode"></i>
+                </div> -->
+                <input type="text" name="captcha" value="" lay-verify="required" placeholder="验证码" lay-reqtext="请填写验证码" autocomplete="off" class="input mgt" lay-affix="clear">
+              </div>
+            </div>
+            <div class="layui-col-xs5">
+              <div style="margin-left: 20px; margin-top: 20px;">
+                <img src="https://www.oschina.net/action/user/captcha" onclick="this.src='https://www.oschina.net/action/user/captcha?t='+ new Date().getTime();" style="border-radius: 30px;margin-top: 2px;">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="two-col mgt">
+          <div class="one">
+             <input type="checkbox" name="" id="check">
+             <label for="check" name="remember" lay-skin="primary" >记住密码</label>
+          </div>
+          <div class="two">
+              <label><a href="#forget">没有账号？</a></label>
+              <label><a href="#forget">忘记密码？</a></label>
+          </div>
+      </div>
+        <div class="input-field mgt">
+            <input type="submit" class="submit" value="登录" id="">
+        </div>
+    </div>
+</form> 
+  
+<script src="../js/layui.js"></script> 
 <script>
-	L2Dwidget.init({
-		"model": { "jsonPath": "https://unpkg.com/live2d-widget-model-hibiki@1.0.5/assets/hibiki.model.json", "scale": 1, "hHeadPos": 0.5, "vHeadPos": 0.618 },
-		"display": { "position": "right", "width": 110, "height": 230, "hOffset": 0, "vOffset": 0 },
-		"mobile": { "show": true, "scale": 0.5 },
-		"react": { "opacityDefault": 0.7, "opacityOnHover": 0.2 }
-	});
-	!function (e, t, a) { function r() { for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999"); requestAnimationFrame(r) } function n() { var t = "function" == typeof e.onclick && e.onclick; e.onclick = function (e) { t && t(), o(e) } } function o(e) { var a = t.createElement("div"); a.className = "heart", s.push({ el: a, x: e.clientX - 5, y: e.clientY - 5, scale: 1, alpha: 1, color: c() }), t.body.appendChild(a) } function i(e) { var a = t.createElement("style"); a.type = "text/css"; try { a.appendChild(t.createTextNode(e)) } catch (t) { a.styleSheet.cssText = e } t.getElementsByTagName("head")[0].appendChild(a) } function c() { return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")" } var s = []; e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) { setTimeout(e, 1e3 / 60) }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r() }(window, document);
+layui.use(function(){
+  var form = layui.form;
+  var layer = layui.layer;
+  // 提交事件
+  form.on('submit(demo-login)', function(data){
+    var field = data.field; // 获取表单字段值
+    layer.alert(JSON.stringify(field), {
+      title: '当前填写的字段值'
+    });
+    return false; // 阻止默认 form 跳转
+  });
+});
 </script>
-<link rel="stylesheet" href="../css/conmom.css">
-<link rel="stylesheet" href="../js/conmom.js">
-<script color="0,0,0" opacity="0.5" count="99" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.js" type="text/javascript" charset="utf-8"></script>
-
-<div class="header">
-	<div class="center">
-		<div class="header-z"><a href="#">万卷书</a></div>
-		<ul>
-			<li><a href="#">我的</a></li>
-			<li><a href="#">更多功能</a></li>
-			<li><a href="#">建议和反馈</a></li>
-			<li><a href="#">文本转语音</a></li>
-			<li><a href="#">首页</a></li>
-		</ul>
-	</div>
-</div>
-<div class="section">
-	<div class="upload">
-		<div class="left">
-			<div class="neirong"><img src="../img/logo.png"></div>
-			<div class="z">文本转语音</div>
-			<p>将文本转为语音MP3文件，并可指定发音人</p>
-		</div>
-		<span class="zero1">01 上传文本文件</span>
-		<span class="zero2">02 选择发言人</span>
-		<sapn class="zero3">03 下载语音文件</sapn>
-		<form method="post" enctype="multipart/form-data" action="/Home/Index">
-			<input type="file" name="files" value="选择模型" class="w1"><br>
-			<input type="file" value="选择配置" class="w3">
-			<textarea class="posi"></textarea>
-			<input type="submit" value="点击上传" class="w2" />
-			@*<input type="button" value="点击上传" class="w2">*@
-		</form>
-	</div>
-</div>
-
+</body>
+</html>
+</body>
+</html>

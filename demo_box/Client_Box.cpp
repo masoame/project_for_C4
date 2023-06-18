@@ -1,28 +1,21 @@
 ﻿#include"Client_Box.h"
 
-
-
-void Client_Box::asyn_groove()
+int Client_Box::linkserver(const char* ip, int port)
 {
-
-}
-
-inline int Client_Box::linkserver(const char* ip, int port)
-{
-	int server_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	sockserver = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	sockaddr_in server_addr;
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = inet_addr(ip);
 	server_addr.sin_port = ntohs(port);
 
-	if (connect(server_sock, (sockaddr*)&server_addr, sizeof(sockaddr)) != 0) return false;
+	if (connect(sockserver, (sockaddr*)&server_addr, sizeof(sockaddr)) != 0) return false;
 
 	Head_code temp;
 
-	send(server_sock, &temp, sizeof(temp), 0);
+	send(sockserver, &temp, sizeof(temp), 0);
 
-	return server_sock;
+	return sockserver;
 }
 
 inline int Client_Box::MakeFile(const char* path,char *file,int len)
@@ -37,18 +30,56 @@ inline int Client_Box::MakeFile(const char* path,char *file,int len)
 
 	tofile.write(file, len);
 	tofile.close();
+
+	arr[path[0] - '0'] = true;
 	return true;
 
 }
 
-int Client_Box::PlaySound()
+char* Client_Box::RecvNet(int* len)
+{
+	
+	while (recv(sockserver, buf, sizeof(Head_code), 0) != -1)
+	{
+		if()
+	}
+	return 0;
+}
+
+//接收数据
+int Client_Box::recvdata(void* arg)
+{
+	Client_Box* client_box = (Client_Box*)arg;
+	int ptr = 0;
+	char str[] = "0.mp3";
+	while (true)
+	{
+		if (!client_box->arr[ptr])
+		{
+			str[0] = '0' + ptr;
+
+			int len;
+			char* buf = RecvNet(&len);
+			MakeFile(str, buf,len);
+		}
+		else
+		{
+			sleep(1);
+		}
+	}
+	return true;
+}
+
+
+
+
+int Client_Box::InitPlaySound()
 {
 	pthread_t  __newthread;
 
 	int fd = pthread_create(&__newthread, NULL, Sound_static, this);
+	pthread_detach(fd);
 
-	void* temp;
-	pthread_join(__newthread, &temp);
 	return 0;
 }
 
@@ -64,6 +95,7 @@ void* Client_Box::Sound_static(void* arg)
 		{
 			str[0] = '0' + ptr;
 			system((std::string("play ") + str).c_str());
+			client_box->arr[ptr] = false;
 			++ptr %= 10;
 		}
 		else

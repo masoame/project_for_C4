@@ -4,12 +4,17 @@ int main(int argc, char* argv[])
 {
 	Client_Box kk;
 
-	char* temp = new char[1024];
+	//链接服务器
+	//int sockserver = kk.linkserver();
 
-	kk.PlaySound();
+	kk.arr[0] = true;
+	kk.arr[1] = true;
+	//初始化循环播放序列
+	kk.InitPlaySound();
 
+	//
+	kk.recvdata();
 
-
-	
+	getchar();
 	return 0;
 }
