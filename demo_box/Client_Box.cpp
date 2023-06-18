@@ -38,10 +38,38 @@ inline int Client_Box::MakeFile(const char* path,char *file,int len)
 
 char* Client_Box::RecvNet(int* len)
 {
-	
+	//缓存区指针
+	char* filetemp = nullptr;
+	char* ptr;
+
+	//数据帧大小为MTU-头帧大小
+	const int size = TCP_MTU - sizeof(Head_code);
 	while (recv(sockserver, buf, sizeof(Head_code), 0) != -1)
 	{
-		if()
+		if (buf->target & READ)
+		{
+			//文件传输第一个包为信息包
+			if (buf->group_num = 0)
+			{
+				//设置缓存区
+				if (filetemp != nullptr)delete[] filetemp;
+				filetemp = new char[buf->size];
+			}
+			else
+			{
+
+				//指向数据区指针
+				ptr = (char*)(buf + 1);
+
+				char* temp = filetemp + buf->group_num * size;
+				memcpy(ptr, temp, size);
+			}
+
+		}
+		else
+		{
+			return 0;
+		}
 	}
 	return 0;
 }
@@ -61,6 +89,9 @@ int Client_Box::recvdata(void* arg)
 			int len;
 			char* buf = RecvNet(&len);
 			MakeFile(str, buf,len);
+
+			arr[ptr] = true;
+			++ptr %= 10;
 		}
 		else
 		{
