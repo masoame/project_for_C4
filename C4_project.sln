@@ -11,7 +11,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo_box", "demo_box\demo_b
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "equb2txt", "equb2txt\equb2txt.vcxproj", "{5B253DBC-4914-4A02-950E-CCE8523A1F4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Learn", "Learn\Learn.csproj", "{F39CD337-43AA-4C94-B77F-E62FDCBE671B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Learn", "Learn\Learn.csproj", "{F39CD337-43AA-4C94-B77F-E62FDCBE671B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,9 +91,9 @@ Global
 		{2905CBE3-AE4E-4712-9A13-216BFCFB6AA8}.Release|ARM64.ActiveCfg = Release|ARM64
 		{2905CBE3-AE4E-4712-9A13-216BFCFB6AA8}.Release|ARM64.Build.0 = Release|ARM64
 		{2905CBE3-AE4E-4712-9A13-216BFCFB6AA8}.Release|ARM64.Deploy.0 = Release|ARM64
-		{2905CBE3-AE4E-4712-9A13-216BFCFB6AA8}.Release|x64.ActiveCfg = Release|x64
-		{2905CBE3-AE4E-4712-9A13-216BFCFB6AA8}.Release|x64.Build.0 = Release|x64
-		{2905CBE3-AE4E-4712-9A13-216BFCFB6AA8}.Release|x64.Deploy.0 = Release|x64
+		{2905CBE3-AE4E-4712-9A13-216BFCFB6AA8}.Release|x64.ActiveCfg = Release|ARM64
+		{2905CBE3-AE4E-4712-9A13-216BFCFB6AA8}.Release|x64.Build.0 = Release|ARM64
+		{2905CBE3-AE4E-4712-9A13-216BFCFB6AA8}.Release|x64.Deploy.0 = Release|ARM64
 		{2905CBE3-AE4E-4712-9A13-216BFCFB6AA8}.Release|x86.ActiveCfg = Release|x86
 		{2905CBE3-AE4E-4712-9A13-216BFCFB6AA8}.Release|x86.Build.0 = Release|x86
 		{2905CBE3-AE4E-4712-9A13-216BFCFB6AA8}.Release|x86.Deploy.0 = Release|x86

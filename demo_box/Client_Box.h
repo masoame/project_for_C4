@@ -33,12 +33,20 @@ typedef struct Head_code
 class Client_Box
 {
 public:
+
+	//全部初始化为false
+	bool arr[10] = { false };
+
 	char buffer[TCP_MTU] = { 0 };
 	LPHead_code buf = (LPHead_code)buffer;
 
-	std::queue<char*> filebuffer;
+	std::queue<char*> filearr;
 
 	void asyn_groove();
 	int linkserver(const char* ip = "192.168.137.1", int port = 0x0721);
 	int MakeFile(const char* path, char* file, int len);
+
+	int PlaySound();
+
+	static void* Sound_static(void* path);
 };

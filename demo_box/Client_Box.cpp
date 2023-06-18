@@ -1,13 +1,13 @@
 ﻿#include"Client_Box.h"
 
 
-//创建文件"槽",文件槽
-void Client_Box::asyn_groove(int)
+
+void Client_Box::asyn_groove()
 {
-	if(filebuffer.)
+
 }
 
-inline int Client_Box::linkserver(const char* ip="192.168.137.1", int port= 0x0721)
+inline int Client_Box::linkserver(const char* ip, int port)
 {
 	int server_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
@@ -39,6 +39,39 @@ inline int Client_Box::MakeFile(const char* path,char *file,int len)
 	tofile.close();
 	return true;
 
+}
+
+int Client_Box::PlaySound()
+{
+	pthread_t  __newthread;
+
+	int fd = pthread_create(&__newthread, NULL, Sound_static, this);
+
+	void* temp;
+	pthread_join(__newthread, &temp);
+	return 0;
+}
+
+//循环播放语音
+void* Client_Box::Sound_static(void* arg)
+{
+	Client_Box* client_box = (Client_Box*)arg;
+	int ptr = 0;
+	char str[] = "0.mp3";
+	while (true)
+	{
+		if (client_box->arr[ptr])
+		{
+			str[0] = '0' + ptr;
+			system((std::string("play ") + str).c_str());
+			++ptr %= 10;
+		}
+		else
+		{
+			sleep(1);
+		}
+	}
+	return nullptr;
 }
 
 
