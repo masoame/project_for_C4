@@ -111,7 +111,10 @@ int Basic_Server::DO_ACCEPT(LPIO_DATA io_data)
 
 	io_data->type = IO_RECV;
 	Check_ret(CreateIoCompletionPort((HANDLE)io_data->socket, iocpHandle, (ULONG_PTR) & io_data, 0) ,NULL);
-	POST_RECV(io_data);
+
+	if (POST_RECV(io_data) == false) std::cout << "消息验证失败" << std::endl;
+	else std::cout << "消息验证成功" << std::endl;
+	
 	return 0;
 }
 
@@ -173,6 +176,7 @@ int Basic_Server::Work_Model()
 		{
 		case IO_ACCEPT:
 
+			std::cout << lpOverlapped->DataBuf.len << std::endl;
 			std::cout << IO_SIZE << std::endl;
 			std::cout << "客户端连接" << std::endl;
 			DO_ACCEPT(lpOverlapped);

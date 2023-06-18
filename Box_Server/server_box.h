@@ -12,8 +12,9 @@ enum status
 	//交流
 	DISALOGUE = 0x0004,
 	//下一个
-	NEXT = 0x0008
-	
+	NEXT = 0x0008,
+	//应答ACK
+	ACK = 0x0010
 };
 //自定义协议
 typedef struct Head_code
@@ -35,7 +36,7 @@ typedef struct Head_code
 
 
 
-class server_box :public Basic_Server
+class Server_Box :public Basic_Server
 {
 	int POST_RECV(LPIO_DATA io_data);
 };

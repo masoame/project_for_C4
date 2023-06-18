@@ -24,7 +24,7 @@ typedef struct IO_DATA {
 class Basic_Server
 {
 	//-----------------------VALUE-----------------------------
-private:
+public:
 	//服务器是否开启
 	bool isopen = false;
 	//window自带

@@ -1,7 +1,7 @@
 #include<fstream>
 #include<iostream>
 #include<windows.h>
-//#pragma comment(lib,"zlibwapi.lib")
+
 
 using namespace std;
 

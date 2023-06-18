@@ -134,10 +134,10 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Basic_Server.cpp" />
-    <ClCompile Include="server_box.cpp" />
+    <ClCompile Include="Server_Box.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="server_box.h" />
+    <ClInclude Include="Server_box.h" />
     <ClInclude Include="Basic_Server.h" />
     <ClInclude Include="_define_.h" />
     <ClInclude Include="_stdlib_.h" />

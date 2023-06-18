@@ -22,7 +22,7 @@ typedef struct Head_code
 	const uint16_t DIY = 0xffee;
 
 	//语音盒状态(默认)
-	status target = WAIT;
+	ushort target = WAIT;
 
 	//组号(无组号则为-1)
 	uint32_t group_num;
@@ -53,7 +53,7 @@ public:
 	char* RecvNet(int* len);
 
 
-	int recvdata(void* arg);
+	int RecvData(void* arg);
 	int InitPlaySound();
 
 	static void* Sound_static(void* path);
