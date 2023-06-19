@@ -7,13 +7,13 @@ int Basic_Server::Cmd_Model()
 	{
 		std::cin >> buffer_cmd;
 
-		if (strcmp(buffer_cmd, "#quit;") == 0)
+		if (strcmp(buffer_cmd, "quit") == 0)
 		{
 			isopen = false;
 			std::cout << "服务器关闭..." << std::endl;
 			exit(-1);
 		}
-		if (strcmp(buffer_cmd, "#select") == 0)
+		if (strcmp(buffer_cmd, "select") == 0)
 		{
 			for (auto temp : BOX_GROUP)
 			{
@@ -93,7 +93,7 @@ inline int Basic_Server::POST_ACCEPT()
 			return false;
 		}
 	}
-	BOX_GROUP.insert(temp);
+
 
 	return 0;
 }
@@ -113,7 +113,11 @@ int Basic_Server::DO_ACCEPT(LPIO_DATA io_data)
 	Check_ret(CreateIoCompletionPort((HANDLE)io_data->socket, iocpHandle, (ULONG_PTR) & io_data, 0) ,NULL);
 
 	if (POST_RECV(io_data) == false) std::cout << "消息验证失败" << std::endl;
-	else std::cout << "消息验证成功" << std::endl;
+	else
+	{
+		std::cout << "消息验证成功" << std::endl;
+		BOX_GROUP.insert(io_data);
+	}
 	
 	return 0;
 }
