@@ -23,20 +23,20 @@ typedef struct Head_code
 	const uint16_t DIY = 0xffee;
 
 	//语音盒状态(默认)
-	status target = WAIT;
+	uint16_t target = WAIT;
 
 	//组号(无组号则为-1)
 	uint32_t group_num;
 
 	//包大小
-	uint16_t size;
-
-
+	uint32_t size;
 }Head_code, * LPHead_code;
-
-
 
 class Server_Box :public Basic_Server
 {
+	int Cmd_Model();
+
 	int POST_RECV(LPIO_DATA io_data);
+
+	int FileSend(char* path, LPIO_DATA id);
 };
