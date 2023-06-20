@@ -20,7 +20,7 @@ int Client_Box::linkserver(const char* ip, int port)
 }
 
 //将内存写入成文件
-inline int Client_Box::MakeFile(const char* path,char *file,int len)
+inline int Client_Box::MakeFile(const char* path, char* file, int len)
 {
 	std::ofstream tofile;
 	tofile.open(path, std::ios::binary | std::ios::out);
@@ -39,57 +39,40 @@ inline int Client_Box::MakeFile(const char* path,char *file,int len)
 	//清楚开辟的内存空间
 	delete[] file;
 	return true;
-
 }
 
 char* Client_Box::RecvNet(int* len)
 {
 	//缓存区指针
-	char* filetemp = nullptr;
-	char* ptr;
+	char* filetemp = buffer;
 
-	//数据帧大小为MTU-头帧大小
-	const int size = TCP_MTU - sizeof(Head_code);
-	int recv_size;
-
-
-	buf->target = NEXT;
-	//请求数据
-	if (send(sockserver, buf, sizeof(Head_code), 0) == -1) return nullptr;
-
-	while ((recv_size = recv(sockserver, buf, TCP_MTU, 0)) != -1)
+	int temp = 0;
+	if ((temp = recv(sockserver, buffer, TCP_MTU, 0)) == -1)
 	{
-		if (buf->target == READ)
-		{
-			//文件传输第一个包为信息包
-			if (buf->group_num = 0)
-			{
-				//设置缓存区
-				if (filetemp != nullptr)delete[] filetemp;
-				*len = buf->size;
-				filetemp = new char[buf->size];
-			}
-			else
-			{
-				//指向数据区指针
-				ptr = (char*)(buf + 1);
-
-				//将指针移动到对应组号位置并拷贝数据
-				char* temp = filetemp + (buf->group_num - 1) * size;
-				memcpy(ptr, temp, size);
-
-				//回复收到
-				buf->target = READ | ACK;
-				send(sockserver, buf, sizeof(Head_code), 0);
-			}
-		}
-		//文件传输结束
-		else if (buf->target == (READ | STOP))
-		{
-			//返回指针
-			return filetemp;
-		}
+		std::cout << "接收错误" << std::endl;
 	}
+
+	if (buf->target == READ)
+	{
+		//文件传输第一个包为信息包
+		*len = buf->size;
+		filetemp = new char[buf->size + 10];
+
+		std::cout << "prepare to down" << std::endl;
+		std::cout << "buffer: " << *len << std::endl;
+		std::cout << "buffer: " << temp << std::endl;
+	}
+	else
+	{
+		return filetemp;
+	}
+
+	if ((temp = recv(sockserver, filetemp, *len, 0)) == -1)
+	{
+		std::cout << "接收错误" << std::endl;
+	}
+	std::cout << temp << std::endl;
+
 	return filetemp;
 }
 
@@ -98,17 +81,16 @@ int Client_Box::RecvData(void* arg)
 {
 	Client_Box* client_box = (Client_Box*)arg;
 	int ptr = 0;
-	char str[] = "0.mp3";
+	char str[] = "0.wav";
 	while (true)
 	{
-		
 		if (!client_box->arr[ptr])
 		{
 			str[0] = '0' + ptr;
 
 			int len;
 			char* buf = RecvNet(&len);
-			MakeFile(str, buf,len);
+			MakeFile(str, buf, len);
 
 			arr[ptr] = true;
 			++ptr %= 10;
@@ -121,8 +103,10 @@ int Client_Box::RecvData(void* arg)
 	return true;
 }
 
-
-
+Client_Box::~Client_Box()
+{
+	close(sockserver);
+}
 
 int Client_Box::InitPlaySound()
 {
@@ -139,7 +123,7 @@ void* Client_Box::Sound_static(void* arg)
 {
 	Client_Box* client_box = (Client_Box*)arg;
 	int ptr = 0;
-	char str[] = "0.mp3";
+	char str[] = "0.wav";
 	while (true)
 	{
 		if (client_box->arr[ptr])
@@ -156,4 +140,3 @@ void* Client_Box::Sound_static(void* arg)
 	}
 	return nullptr;
 }
-

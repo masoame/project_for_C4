@@ -2,7 +2,6 @@
 #include<iostream>
 #include<windows.h>
 
-
 using namespace std;
 
 #define BUFFER_MAX (1024*2)

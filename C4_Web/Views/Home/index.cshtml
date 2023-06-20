@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,98 +6,108 @@
     <title>登录界面</title>
 </head>
 <body>
-    <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo</title>
-  <link href="../css/layui.css" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css">
-  <style>
-    .demo-login-container{width: 320px; margin: 21px auto 0;}
-    .demo-login-other .layui-icon{position: relative; display: inline-block; margin: 0 2px; top: 2px; font-size: 26px;}
-    </style>
-</head>
-<body>
-  <ul class="layui-nav layui-bg-blue" lay-bar="disabled">
-    <li class="layui-nav-item"><a href="nav.html">VITS</a></li>
-    <li class="layui-nav-item"><a href="nav.html">菜单1</a></li>
-    <li class="layui-nav-item"><a href="nav.html">菜单2</a></li>
-    <li class="layui-nav-item">
-      <a href="javascript:;">更多</a>
-      <dl class="layui-nav-child">
-        <dd><a href="nav.html">选项1</a></dd>
-        <dd><a href="nav.html">选项2</a></dd>
-        <dd><a href="nav.html">选项3</a></dd>
-      </dl>
-    </li>
-    <li class="layui-nav-item"><a href="nav.html">菜单3</a></li>
-  </ul>
-  <form class="box">
-    <div class="container">
+ <!DOCTYPE html>
+ <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Demo</title>
+        <link href="../css/layui.css" rel="stylesheet">
+        <link rel="stylesheet" href="../css/style.css">
+        <style>
+            .demo-login-container {
+                width: 320px;
+                margin: 21px auto 0;
+            }
 
-        <div class="top">
-            <header>登录</header>
-        </div>
+            .demo-login-other .layui-icon {
+                position: relative;
+                display: inline-block;
+                margin: 0 2px;
+                top: 2px;
+                font-size: 26px;
+            }
+        </style>
+    </head>
+    <body>
+        <ul class="layui-nav layui-bg-blue" lay-bar="disabled">
+            <li class="layui-nav-item"><a href="nav.html">VITS</a></li>
+            <li class="layui-nav-item"><a href="nav.html">菜单1</a></li>
+            <li class="layui-nav-item"><a href="nav.html">菜单2</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">更多</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="nav.html">选项1</a></dd>
+                    <dd><a href="nav.html">选项2</a></dd>
+                    <dd><a href="nav.html">选项3</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="nav.html">菜单3</a></li>
+        </ul>
+        <form asp-controller="Home" asp-action="Login" method="post" class="box" runat="server">
+            <div class="container">
 
-        <div class="input-field">
-            <input type="text" class="input mgt" placeholder="用户名" id="">
-            <i class='bx bx-user' ></i>
-        </div>
-        <div class="input-field" >
-            <input type="Password" class="input mgt" placeholder="密码" id="">
-            <i class='bx bx-lock-alt'></i>
-        </div>
-        <div class="layui-form-item">
-          <div class="layui-row">
-            <div class="layui-col-xs7">
-              <div class="layui-input-wrap input-field">
-                <!-- <div class="layui-input-prefix">
-                  <i class="layui-icon layui-icon-vercode"></i>
-                </div> -->
-                <input type="text" name="captcha" value="" lay-verify="required" placeholder="验证码" lay-reqtext="请填写验证码" autocomplete="off" class="input mgt" lay-affix="clear">
-              </div>
+                <div class="top">
+                    <header>登录</header>
+                </div>
+
+                <div class="input-field">
+                    <input id="Username" type="text" name="Username" class="input mgt" placeholder="用户名" runat="server" >
+                    <i class='bx bx-user'></i>
+                </div>
+                <div class="input-field">
+                    <input id="Password" type="Password" name="Password" class="input mgt" placeholder="密码" runat="server">
+                    <i class='bx bx-lock-alt'></i>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-xs7">
+                            <div class="layui-input-wrap input-field">
+                                <!-- <div class="layui-input-prefix">
+                                  <i class="layui-icon layui-icon-vercode"></i>
+                                </div> -->
+                                <input type="text" name="captcha" value="" lay-verify="required" placeholder="验证码" lay-reqtext="请填写验证码" autocomplete="off" class="input mgt" lay-affix="clear">
+                            </div>
+                        </div>
+                        <div class="layui-col-xs5">
+                            <div style="margin-left: 20px; margin-top: 20px;">
+                                <img src="https://www.oschina.net/action/user/captcha" onclick="this.src='https://www.oschina.net/action/user/captcha?t='+ new Date().getTime();" style="border-radius: 30px;margin-top: 2px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="two-col mgt">
+                    <div class="one">
+                        <input type="checkbox" name="" id="check">
+                        <label for="check" name="remember" lay-skin="primary">记住密码</label>
+                    </div>
+                    <div class="two">
+                        <label><a href="#forget">没有账号？</a></label>
+                        <label><a href="#forget">忘记密码？</a></label>
+                    </div>
+                </div>
+                <div class="input-field mgt">
+                    <input type="submit" class="submit" value="登录" runat="server" >
+                </div>
             </div>
-            <div class="layui-col-xs5">
-              <div style="margin-left: 20px; margin-top: 20px;">
-                <img src="https://www.oschina.net/action/user/captcha" onclick="this.src='https://www.oschina.net/action/user/captcha?t='+ new Date().getTime();" style="border-radius: 30px;margin-top: 2px;">
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="two-col mgt">
-          <div class="one">
-             <input type="checkbox" name="" id="check">
-             <label for="check" name="remember" lay-skin="primary" >记住密码</label>
-          </div>
-          <div class="two">
-              <label><a href="#forget">没有账号？</a></label>
-              <label><a href="#forget">忘记密码？</a></label>
-          </div>
-      </div>
-        <div class="input-field mgt">
-            <input type="submit" class="submit" value="登录" id="">
-        </div>
-    </div>
-</form> 
-  
-<script src="../js/layui.js"></script> 
-<script>
-layui.use(function(){
-  var form = layui.form;
-  var layer = layui.layer;
-  // 提交事件
-  form.on('submit(demo-login)', function(data){
-    var field = data.field; // 获取表单字段值
-    layer.alert(JSON.stringify(field), {
-      title: '当前填写的字段值'
-    });
-    return false; // 阻止默认 form 跳转
-  });
-});
-</script>
-</body>
+        </form>
+
+        <script src="../js/layui.js"></script>
+        <script>
+            layui.use(function () {
+                var form = layui.form;
+                var layer = layui.layer;
+                // 提交事件
+                form.on('submit(demo-login)', function (data) {
+                    var field = data.field; // 获取表单字段值
+                    layer.alert(JSON.stringify(field), {
+                        title: '当前填写的字段值'
+                    });
+                    return false; // 阻止默认 form 跳转
+                });
+            });
+        </script>
+    </body>
 </html>
 </body>
 </html>

@@ -10,15 +10,14 @@ enum IO_TYPE
 
 //重叠结构体
 typedef struct IO_DATA {
-
+	//重叠结构体
 	OVERLAPPED Overlapped;
 	SOCKET socket;
 	IO_TYPE type;
 	WSABUF DataBuf;
+	uint8_t ACK;
 	CHAR Buffer[TCP_MTU + (SOCKADDR_IN_LEN + 16) * 2];
-
 } IO_DATA, * LPIO_DATA;
-
 
 //服务器基类
 class Basic_Server
@@ -42,7 +41,6 @@ public:
 
 	HANDLE iocpHandle = nullptr;
 
-
 	//管理员输入字符缓存区域
 	char* buffer_cmd = nullptr;
 
@@ -50,7 +48,7 @@ public:
 public:
 
 	//客户端命令模块
-	virtual int Cmd_Model();
+	virtual int Cmd_Model() = 0;
 
 	//投递ACCEPT
 	int POST_ACCEPT();
@@ -61,7 +59,6 @@ public:
 	//投递RECV
 	virtual int POST_RECV(LPIO_DATA io_data);
 
-	
 	//工作线程
 	virtual int Work_Model();
 
@@ -71,14 +68,14 @@ public:
 	//开始服务器
 	virtual int run();
 
-private: 
+private:
 
 	static int static_Work_Model(Basic_Server* basic_server);
 
 	static int static_Cmd_Model(Basic_Server* basic_server);
 
 	//-------------------------CLASS----------------------------
-public: 
+public:
 
 	//构造函数
 	Basic_Server();

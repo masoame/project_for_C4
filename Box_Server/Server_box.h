@@ -29,17 +29,14 @@ typedef struct Head_code
 	uint32_t group_num;
 
 	//ฐüด๓ะก
-	uint16_t size;
-
-
+	uint32_t size;
 }Head_code, * LPHead_code;
-
-
 
 class Server_Box :public Basic_Server
 {
+	int Cmd_Model();
+
 	int POST_RECV(LPIO_DATA io_data);
 
 	int FileSend(char* path, LPIO_DATA id);
-
 };

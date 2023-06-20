@@ -13,7 +13,9 @@ enum status
 	//下一个
 	NEXT = 0x0008,
 	//应答ACK
-	ACK = 0x0010
+	ACK = 0x0010,
+	//信息
+	Message = 0x0020
 };
 //自定义协议
 typedef struct Head_code
@@ -22,15 +24,13 @@ typedef struct Head_code
 	const uint16_t DIY = 0xffee;
 
 	//语音盒状态(默认)
-	ushort target = WAIT;
+	uint16_t target = WAIT;
 
 	//组号(无组号则为-1)
 	uint32_t group_num;
 
 	//包大小
-	uint16_t size;
-
-
+	uint32_t size;
 }Head_code, * LPHead_code;
 
 class Client_Box
@@ -52,9 +52,10 @@ public:
 	//从网络接收
 	char* RecvNet(int* len);
 
-
 	int RecvData(void* arg);
 	int InitPlaySound();
 
 	static void* Sound_static(void* path);
+
+	~Client_Box();
 };

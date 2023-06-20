@@ -1,20 +1,79 @@
 ﻿using C4_Web.Models;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
+using WebApplication2.Models;
 
 namespace C4_Web.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IHostEnvironment _hostEnvironment;
+        private readonly ILogger<HomeController> _logger;
+        private mydbContext _context;
 
-        public HomeController(IHostEnvironment hostEnvironment)
+        public HomeController(IHostEnvironment hostEnvironment, ILogger<HomeController> logger, mydbContext context)
         {
             _hostEnvironment = hostEnvironment;
+            _logger = logger;
+            //添加服务
+            _context = context;
+        }
+
+        [HttpPost]
+        public IActionResult Login(UserInfo user)
+        {
+            if (user.Username == null)
+            {
+                ViewBag.AlertMsg = "账号不能为空";
+            }
+            else if (user.Password == null)
+            {
+                ViewBag.AlertMsg = "密码不能为空";
+            }
+            else
+            {
+                var u = _context.UserInfos.FirstOrDefault(p => p.Username == user.Username && p.Password == user.Password);
+                if (u != null)
+                {
+                    return RedirectToAction("index1");
+                }
+            }
+
+            return View();
+        }
+
+        public IActionResult index1()
+        {
+            return View();
+        }
+
+        //调用exe按钮
+        [HttpPost]
+        public IActionResult zhuanhuan(IFormFile fileInput)
+        {
+            var filePath = Path.GetFullPath("Books\\" + fileInput.FileName);
+            startexe model = new startexe();
+            if (filePath != null)
+            {
+                model.start(filePath);
+                ViewBag.AlertMsg = "生成成功";
+            }
+
+            return View();
+        }
+
+        //转化
+        public IActionResult zhuanhuan()
+        {
+            return View();
+        }
+
+        public IActionResult buttun()
+        {
+            return View();
         }
 
         public IActionResult Index()
@@ -57,7 +116,7 @@ namespace C4_Web.Controllers
             string[] files1 = Directory.GetFiles(rootPath, "*chapter*", SearchOption.AllDirectories);
 
             // 创建test文件夹
-            string testPath = Path.Combine( $@"./Books/OEBPS/test");
+            string testPath = Path.Combine($@"./Books/OEBPS/test");
             if (!Directory.Exists(testPath))
             {
                 Directory.CreateDirectory(testPath);
@@ -77,12 +136,8 @@ namespace C4_Web.Controllers
                 }
             }
 
-
-
-
             return View("Views\\Home\\chapter10.cshtml");
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -90,20 +145,21 @@ namespace C4_Web.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
-    class vits
-    {
 
+    internal class vits
+    {
         private decimal LENGTHSCALE;
         private decimal NOISESCALE;
         private decimal NOISESCALEW;
 
-        CommandLine cmd;
+        private CommandLine cmd;
 
         public class CommandLine
         {
             private readonly Process process;
 
             public delegate void onOutputHandler(CommandLine sender, string e);
+
             public event onOutputHandler OutputHandler;
 
             public CommandLine()
@@ -134,12 +190,12 @@ namespace C4_Web.Controllers
                 }
             }
 
-            void Command_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+            private void Command_ErrorDataReceived(object sender, DataReceivedEventArgs e)
             {
                 OnOutput(e.Data);
             }
 
-            void Command_OutputDataReceived(object sender, DataReceivedEventArgs e)
+            private void Command_OutputDataReceived(object sender, DataReceivedEventArgs e)
             {
                 OnOutput(e.Data);
             }
@@ -162,10 +218,6 @@ namespace C4_Web.Controllers
             }
         }
 
-
-
-
-
         private void TTS(string text, int speaker)
         {
             cmd.Write("t");
@@ -173,5 +225,4 @@ namespace C4_Web.Controllers
             cmd.Write(speaker.ToString());
         }
     }
-
 }

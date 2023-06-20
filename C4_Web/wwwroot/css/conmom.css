@@ -1,0 +1,239 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header {
+    height: 88px;
+    background-image: linear-gradient(to right, rgb(223, 177, 185), rgb(237, 181, 181), rgb(236, 236, 192), rgb(241, 214, 218), rgb(226, 202, 157));
+}
+
+.center {
+    width: 1288px;
+    margin: 0 auto;
+}
+
+.header-z {
+    float: left;
+    height: 88px;
+    width: 180px;
+    color: white;
+    text-align: center;
+}
+
+    .header-z a {
+        float: left;
+        font-family: 微软雅黑;
+        font-size: 48px;
+        font-weight: 700;
+        list-style: none;
+        color: white;
+        text-decoration: none;
+        line-height: 88px;
+    }
+
+ul li {
+    list-style: none;
+    color: white;
+}
+
+.center ul li a {
+    float: right;
+    text-decoration: none;
+    margin: 20px;
+    margin-top: 30px;
+    color: white;
+}
+
+    .center ul li a:hover {
+        display: block;
+        background-color: white;
+        color: black;
+        height: inherit;
+        width: inherit;
+        border-radius: 5%;
+    }
+
+.footer {
+    width: 100%;
+    height: 30px;
+    background-color: rgb(128, 128, 128);
+}
+
+.section {
+    width: 80%;
+    margin: 0 auto;
+    height: 60%;
+}
+
+span {
+    display: inline-block;
+    border-radius: 5%;
+    width: 120px;
+    height: 21px;
+    background-color: rgb(224, 224, 233)k;
+}
+
+form {
+    position: absolute;
+    top: 160px;
+    left: 30px;
+    width: 580px;
+    height: 326px;
+    background-color: rgb(245, 247, 250);
+    box-shadow:;
+    border-radius: 5%;
+}
+
+input {
+    display: inline;
+    border-radius: 5%;
+    box-shadow: -2px 2px 2px;
+    border: none;
+}
+
+.up {
+    width: 115px;
+    height: 38px;
+    font-size: 16px;
+    margin: 15px auto;
+    border-radius: 12px;
+    color: #ec4899;
+    background-color: rgb(253,253,255);
+    background-image: url(../img/uploaad.png) no-repeat;
+    background: position 80px;
+}
+
+.zero1 {
+    position: absolute;
+    top: 125px;
+    left: 110px;
+    color: rgb(107, 171, 250);
+    background-color: rgb(191, 219, 254);
+    border-radius: 4px;
+}
+
+.zero2 {
+    position: absolute;
+    top: 125px;
+    left: 232px;
+    color: rgb(249, 118, 127);
+    background-color: rgb(254, 202, 202);
+    border-radius: 4px;
+}
+
+.zero3 {
+    position: absolute;
+    top: 125px;
+    left: 354px;
+    color: rgb(244, 142, 206);
+    background-color: rgb(251, 207, 232);
+    border-radius: 4px;
+}
+
+.upload {
+    position: relative;
+    height: 520px;
+    margin-top: 60px;
+    border-radius: 20px;
+    text-align: center;
+    background-image: linear-gradient(to right, rgb(237, 240, 254), rgb(238, 243, 253), rgb(244, 243, 243), rgb(250, 243, 235), rgb(254, 249, 230));
+}
+
+.left {
+    position: absolute;
+    height: 50px;
+    top: 0;
+    left: 0;
+}
+
+.next {
+    background-image: linear-gradient(to right, rgba(236, 71, 141,.3), rgba(239, 68, 70,.3), rgba(246, 103, 103,.3));
+}
+
+.float {
+    float: left;
+}
+
+.margin {
+    margin: 20px;
+    margin-bottom: 10px;
+    margin-left: -20px;
+}
+
+.b {
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.upload-img img {
+    height: 18px;
+    width: 18px;
+}
+
+.neirong img {
+    position: absolute;
+    top: 40px;
+    left: 160px;
+    width: 45px;
+    height: 45px;
+}
+
+.z {
+    font-family: 楷体;
+    font-size: 32px;
+    text-align: center;
+    font-weight: 700;
+    position: absolute;
+    top: 40px;
+    left: 195px;
+    width: 208px;
+    height: 32px;
+    margin-top: 5px;
+}
+
+.left p {
+    position: absolute;
+    top: 100px;
+    left: 120px;
+    width: 310px;
+    height: 32px;
+}
+
+.posi {
+    position: absolute;
+    top: 70px;
+    ;
+    left: 40px;
+    width: 485px;
+    height: 188px;
+    resize: none;
+}
+
+.w1 {
+    position: absolute;
+    top: 15px;
+    left: 40px;
+}
+
+.w2 {
+    position: absolute;
+    top: 268px;
+    left: 230px;
+    border: none;
+    width: 74px;
+    height: 40px;
+}
+
+.w3 {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+}
+
+.w2:hover {
+    border-radius: 4px;
+    color: #ec4899;
+    transition: all .5s ease-in-out;
+}

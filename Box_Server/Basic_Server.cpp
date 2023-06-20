@@ -1,29 +1,5 @@
 ﻿#include"Basic_Server.h"
 
-
-int Basic_Server::Cmd_Model()
-{
-	while (isopen)
-	{
-		std::cin >> buffer_cmd;
-
-		if (strcmp(buffer_cmd, "quit") == 0)
-		{
-			isopen = false;
-			std::cout << "服务器关闭..." << std::endl;
-			exit(-1);
-		}
-		if (strcmp(buffer_cmd, "select") == 0)
-		{
-			for (auto temp : BOX_GROUP)
-			{
-				std::cout << temp->socket << std::endl;
-			}
-		}
-	}
-	return 0;
-}
-
 int Basic_Server::init(const char* ip, const int port)
 {
 	isopen = true;
@@ -60,7 +36,6 @@ int Basic_Server::init(const char* ip, const int port)
 	io_data->socket = listen_socket;
 	io_data->type = IO_ACCEPT;
 
-
 	//将socket绑定到IOCP
 	Check_ret(CreateIoCompletionPort((HANDLE)listen_socket, iocpHandle, (ULONG_PTR)io_data, 0), NULL);
 
@@ -94,7 +69,6 @@ inline int Basic_Server::POST_ACCEPT()
 		}
 	}
 
-
 	return 0;
 }
 
@@ -104,13 +78,11 @@ int Basic_Server::DO_ACCEPT(LPIO_DATA io_data)
 	int LocaladdrLength = sizeof(sockaddr_in), RemoteaddrLength = sizeof(sockaddr_in);
 	GetAcceptExSockaddrs(io_data->DataBuf.buf, TCP_MTU, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, (sockaddr**)&Localaddr, &LocaladdrLength, (sockaddr**)&Remoteaddr, &RemoteaddrLength);
 
-
 	std::cout << "收到来自ip: " << inet_ntoa(Remoteaddr->sin_addr) << " port: " << ntohs(Remoteaddr->sin_port) << std::endl;
 	std::cout << "验证信息: " << io_data->DataBuf.buf << std::endl;
 
-
 	io_data->type = IO_RECV;
-	Check_ret(CreateIoCompletionPort((HANDLE)io_data->socket, iocpHandle, (ULONG_PTR) & io_data, 0) ,NULL);
+	Check_ret(CreateIoCompletionPort((HANDLE)io_data->socket, iocpHandle, (ULONG_PTR)&io_data, 0), NULL);
 
 	if (POST_RECV(io_data) == false) std::cout << "消息验证失败" << std::endl;
 	else
@@ -118,7 +90,7 @@ int Basic_Server::DO_ACCEPT(LPIO_DATA io_data)
 		std::cout << "消息验证成功" << std::endl;
 		BOX_GROUP.insert(io_data);
 	}
-	
+
 	return 0;
 }
 
@@ -135,13 +107,11 @@ inline int Basic_Server::POST_RECV(LPIO_DATA io_data)
 //工作模块
 int Basic_Server::Work_Model()
 {
-
 	DWORD IO_SIZE = 0;
 	//创建重叠结构体指针
 	LPIO_DATA lpCompletionKey = nullptr;
 	//重叠结构体
 	LPIO_DATA lpOverlapped = nullptr;
-	
 
 	while (isopen)
 	{
@@ -167,14 +137,13 @@ int Basic_Server::Work_Model()
 			std::cout << "客户端断开" << std::endl;
 			if (closesocket(lpOverlapped->socket) != 0)
 			{
-				std::cout << "套接字关闭失败" << WSAGetLastError()<< std::endl;
+				std::cout << "套接字关闭失败" << WSAGetLastError() << std::endl;
 			}
 
 			BOX_GROUP.erase(lpOverlapped);
 			delete lpOverlapped;
 			continue;
 		}
-
 
 		switch (lpOverlapped->type)
 		{
@@ -189,11 +158,10 @@ int Basic_Server::Work_Model()
 
 		case IO_RECV:
 
-			std::cout << lpOverlapped->Buffer << std::endl;	
+			std::cout << lpOverlapped->Buffer << std::endl;
 			POST_RECV(lpOverlapped);
 
 			break;
-
 		}
 	}
 
@@ -213,7 +181,6 @@ int Basic_Server::run()
 
 	HANDLE cmd = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)static_Cmd_Model, this, NULL, NULL);
 
-
 	//投递SOCKET等待connect
 	for (int i = 0; i != work_num; i++)
 	{
@@ -221,7 +188,7 @@ int Basic_Server::run()
 	}
 
 	//创建CPU核心数两倍的工作线程
-	for (int i = 0; i!= work_num; i++)
+	for (int i = 0; i != work_num; i++)
 	{
 		workgroup[i] = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)static_Work_Model, this, NULL, NULL);
 	}
@@ -231,7 +198,6 @@ int Basic_Server::run()
 	{
 		WaitForSingleObject(workgroup[i], INFINITE);
 	}
-
 
 	WaitForSingleObject(cmd, INFINITE);
 
@@ -247,7 +213,6 @@ inline int Basic_Server::static_Cmd_Model(Basic_Server* basic_server)
 {
 	return basic_server->Cmd_Model();
 }
-
 
 Basic_Server::Basic_Server()
 {
