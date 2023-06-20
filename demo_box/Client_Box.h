@@ -26,9 +26,6 @@ typedef struct Head_code
 	//语音盒状态(默认)
 	uint16_t target = WAIT;
 
-	//组号(无组号则为-1)
-	uint32_t group_num;
-
 	//包大小
 	uint32_t size;
 }Head_code, * LPHead_code;

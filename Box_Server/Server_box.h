@@ -14,7 +14,9 @@ enum status
 	//下一个
 	NEXT = 0x0008,
 	//应答ACK
-	ACK = 0x0010
+	ACK = 0x0010,
+	//信息
+	Message = 0x0020
 };
 //自定义协议
 typedef struct Head_code
@@ -25,18 +27,16 @@ typedef struct Head_code
 	//语音盒状态(默认)
 	uint16_t target = WAIT;
 
-	//组号(无组号则为-1)
-	uint32_t group_num;
-
 	//包大小
 	uint32_t size;
 }Head_code, * LPHead_code;
 
-class Server_Box :public Basic_Server
+typedef class Server_Box :public Basic_Server
 {
+public:
 	int Cmd_Model();
 
 	int POST_RECV(LPIO_DATA io_data);
 
 	int FileSend(char* path, LPIO_DATA id);
-};
+}*LpServer_Box;

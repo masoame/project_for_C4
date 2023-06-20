@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -132,11 +132,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="ExportDll.cpp" />
     <ClCompile Include="Basic_Server.cpp" />
     <ClCompile Include="Server_Box.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ExportDll.h" />
     <ClInclude Include="Server_box.h" />
     <ClInclude Include="Basic_Server.h" />
     <ClInclude Include="_define_.h" />

@@ -1,34 +1,33 @@
-body {
+
+body{
     background-image: url("../img/1.jpg");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     background-repeat: no-repeat;
+    
 }
-
-.box {
+.box{
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 90vh;
 }
-
-.container {
+.container{
     width: 350px;
     display: flex;
     flex-direction: column;
     padding: 0 15px 0 15px;
+    
 }
-
-span {
+span{
     color: #fff;
     font-size: small;
     display: flex;
     justify-content: center;
     padding: 10px 0 10px 0;
 }
-
-header {
+header{
     color: #fff;
     font-size: 30px;
     display: flex;
@@ -36,7 +35,7 @@ header {
     padding: 10px 0 10px 0;
 }
 
-.input-field .input {
+.input-field .input{
     height: 45px;
     width: 87%;
     border: none;
@@ -47,19 +46,16 @@ header {
     background: rgba(255,255,255,0.1);
     outline: none;
 }
-
-i {
+i{
     position: relative;
     top: -33px;
     left: 17px;
     color: #fff;
 }
-
-::-webkit-input-placeholder {
+::-webkit-input-placeholder{
     color: #fff;
 }
-
-.submit {
+.submit{
     border: none;
     border-radius: 30px;
     font-size: 15px;
@@ -69,14 +65,12 @@ i {
     color: black;
     background: rgba(255,255,255,0.7);
     cursor: pointer;
-    transition: .3s;
+    transition: .3s ;
 }
-
-    .submit:hover {
-        box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.2);
-    }
-
-.two-col {
+.submit:hover{
+    box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.2);
+}
+.two-col{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -84,12 +78,10 @@ i {
     font-size: small;
     margin-top: 10px;
 }
-
-.one {
+.one{
     display: flex;
 }
-
-label a {
+label a{
     text-decoration: none;
     color: #fff;
 }

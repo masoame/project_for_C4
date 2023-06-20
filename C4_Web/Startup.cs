@@ -1,5 +1,10 @@
-﻿using global::WebApplication2.Models;
+﻿using Microsoft.AspNetCore.Builder;
+
+
+using Microsoft.AspNetCore.Builder;
+using C4_Web.Models;
 using Microsoft.EntityFrameworkCore;
+using global::WebApplication2.Models;
 
 namespace C4_Web
 {
@@ -9,16 +14,14 @@ namespace C4_Web
         {
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         }
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
-
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddRazorPages();
             services.AddControllersWithViews();
             //添加数据库上下文对象
@@ -27,7 +30,6 @@ namespace C4_Web
                 options.UseSqlServer(Configuration.GetConnectionString("mydb"));
             });
         }
-
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
             if (!app.Environment.IsDevelopment())
@@ -38,7 +40,8 @@ namespace C4_Web
             app.UseAuthorization();
             app.MapControllerRoute(
              name: "default",
-             pattern: "{controller=Home}/{action=index}/{id?}");
+             pattern: "{controller=Home}/{action=zhuanhuan}/{id?}");
+
         }
     }
 }

@@ -18,7 +18,7 @@
     <ClCompile Include="Basic_Server.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="ExportDll.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Server_Box.cpp">
@@ -36,6 +36,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Server_box.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ExportDll.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -53,10 +53,7 @@ int Server_Box::POST_RECV(LPIO_DATA io_data)
 	case WAIT:
 
 		break;
-		//回复已经收到对应文件
-	case READ | ACK:
 
-		break;
 	}
 
 	Basic_Server::POST_RECV(io_data);
@@ -66,8 +63,6 @@ int Server_Box::POST_RECV(LPIO_DATA io_data)
 //收到后台文件发送命令后
 int Server_Box::FileSend(char* path, LPIO_DATA io_data)
 {
-	//每一个发送帧的大小
-	const int framesize = TCP_MTU - sizeof(Head_code);
 
 	//接收缓存识别头文件
 	LPHead_code temp = (LPHead_code)io_data->Buffer;
@@ -80,7 +75,6 @@ int Server_Box::FileSend(char* path, LPIO_DATA io_data)
 
 	//设置协议头
 	temp->target = READ;
-	temp->group_num = 0;
 	temp->size = file.tellg();
 
 	//开辟文件读取内存

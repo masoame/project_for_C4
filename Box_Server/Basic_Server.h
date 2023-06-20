@@ -15,7 +15,6 @@ typedef struct IO_DATA {
 	SOCKET socket;
 	IO_TYPE type;
 	WSABUF DataBuf;
-	uint8_t ACK;
 	CHAR Buffer[TCP_MTU + (SOCKADDR_IN_LEN + 16) * 2];
 } IO_DATA, * LPIO_DATA;
 
