@@ -24,10 +24,9 @@ namespace C4_Web.Models
 
                 proc.Start();
 
+                const int speak_id = 141;
                 int i = 0;
-                string s = "y";
-                string[] commands1 = new string[] { "D:\\c4\\Mahiro-VITS\\G_latest.pth", "D:\\c4\\Mahiro-VITS\\finetune_speaker.json",
-            "t","[ZH]欢迎收听[ZH]","126","D:\\c4\\Mahiro-VITS\\"+i+".wav",s}; // 指令参数列表
+                string[] commands1 = new string[] { "D:\\c4\\Mahiro-VITS\\G_latest.pth", "D:\\c4\\Mahiro-VITS\\finetune_speaker.json", "t", "[ZH]欢迎收听[ZH]", speak_id.ToString(), "D:\\c4\\Mahiro-VITS\\" + i + ".wav", "y" }; // 指令参数列表
                 i++;
                 foreach (string command in commands1)
                 {
@@ -38,7 +37,7 @@ namespace C4_Web.Models
                     string line;
                     while ((line = sr.ReadLine()) != null)
                     { // 循环读取每一行文本，并逐条发送到外部应用程序中执行命令
-                        string[] commands2 = new string[] { "t", "[ZH]" + line + "[ZH]", "126", "D:\\c4\\Mahiro-VITS\\" + i + ".wav", s }; // 指令参数列表
+                        string[] commands2 = new string[] { "t", "[ZH]" + line + "[ZH]", speak_id.ToString(), "D:\\c4\\Mahiro-VITS\\" + i + ".wav", "y" }; // 指令参数列表
                         i++;
                         foreach (string command in commands2)
                         {
@@ -46,7 +45,7 @@ namespace C4_Web.Models
                         }
                     }
                 }
-                string[] commands3 = new string[] { "t", "[ZH]收听结束[ZH]", "126", "D:\\c4\\Mahiro-VITS\\" + i + ".wav", "n" }; // 指令参数列表
+                string[] commands3 = new string[] { "t", "[ZH]收听结束[ZH]", speak_id.ToString(), "D:\\c4\\Mahiro-VITS\\" + i + ".wav", "n" }; // 指令参数列表
                 i++;
                 foreach (string command in commands3)
                 {

@@ -9,6 +9,7 @@ int main(int argc, char* argv[])
 
 	////初始化循环播放序列
 	kk.InitPlaySound();
+	//开始接收服务器请求
 	kk.RecvData(&kk);
 
 	//kk.RecvData();
