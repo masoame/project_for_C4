@@ -26,5 +26,4 @@ thread1.Join();
 extern static void  server_start();
 
 [DllImport("Box_Server.dll", EntryPoint = "sendFile")]
-
 extern static void sendFile([MarshalAs(UnmanagedType.LPStr)] string str, Int64 id);

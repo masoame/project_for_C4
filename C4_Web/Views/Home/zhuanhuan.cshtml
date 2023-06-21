@@ -82,19 +82,24 @@
                     小说内容显示区域
                 </blockquote>
                 <form asp-controller="Home" asp-action="zhuanhuan" method="post" runat="server" enctype="multipart/form-data">
-                    >
                 <div class="layui-card layui-panel">
                     <div class="layui-card-header">
                       <input type="file" name="fileInput">
                     </div>
                     <div class="layui-card-header">
-                    <input type="submit" id="submit" >
+                            <input type="submit" id="submit">
                     </div>
                     <div class="layui-card-body">
                         <div id="output"></div>
                     </div>
                 </div>
                 </form>
+                <form asp-controller="Home" asp-action="langdu" method="post" runat="server" >
+                       <div class="layui-card-header">
+                            <input type="submit" id="submit" value="朗读">
+                        </div>
+                </form>
+
                 <br><br>
             </div>
         </div>

@@ -1,6 +1,7 @@
 ﻿using C4_Web.Models;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
@@ -37,7 +38,7 @@ namespace C4_Web.Controllers
                 var u = _context.UserInfos.FirstOrDefault(p => p.Username==user.Username&&p.Password==user.Password);
                 if (u!=null)
                 {
-                    return RedirectToAction("index1");
+                    return RedirectToAction("zhuanhuan");
                 }
             }
 
@@ -45,23 +46,44 @@ namespace C4_Web.Controllers
         }
         public IActionResult index1()
         {
-         
+
             return View();
         }
         //调用exe按钮
         [HttpPost]
         public IActionResult zhuanhuan(IFormFile fileInput)
         {
-            var filePath = Path.GetFullPath("Books\\"+fileInput.FileName);
-            startexe model = new startexe();
-            if (filePath!=null)
+            if(fileInput == null) return View();
+
+            string webContentPath = _hostEnvironment.ContentRootPath;   //获取项目根目录
+
+            string path = webContentPath + "\\Books\\" + fileInput.FileName;
+            using (FileStream fileStream = new FileStream(path, FileMode.Create))
             {
-                model.start(filePath);
-                ViewBag.AlertMsg="生成成功";
+                fileInput.CopyTo(fileStream);
             }
-           
+
+             TTS.start(path);
+
+            ViewBag.AlertMsg = "生成成功";
+
             return View();
        
+        }
+
+        [HttpPost]
+        public IActionResult langdu()
+        {
+            string str1 = "D:\\c4\\Mahiro-VITS\\";
+            string str2 = ".wav";
+            for (int i = 0; i != TTS.num+1; i++)
+            {
+                server_dll.sendFile(str1 + i + str2, 0);
+                Thread.Sleep(1000);
+            }
+
+            return View("zhuanhuan");
+
         }
         //转化
         public IActionResult zhuanhuan()
@@ -110,7 +132,7 @@ namespace C4_Web.Controllers
             ZipFile.ExtractToDirectory($@"./Books/{fileNew}", $@"./Books", Encoding.GetEncoding("gb2312"));
             // 返回与指定虚拟路径相对应的物理路径即绝对路径
 
-            // 删除该文件\
+            // 删除该文件
             System.IO.File.Delete(Path.Combine($@"./Books/{fileNew}"));
             string rootPath = Path.Combine($@"./Books/OEBPS/Text");
             string[] files1 = Directory.GetFiles(rootPath, "*chapter*", SearchOption.AllDirectories);
@@ -136,10 +158,7 @@ namespace C4_Web.Controllers
                 }
             }
 
-
-
-
-            return View("Views\\Home\\chapter10.cshtml");
+            return View();
         }
 
 
@@ -147,89 +166,6 @@ namespace C4_Web.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-    }
-    class vits
-    {
-
-        private decimal LENGTHSCALE;
-        private decimal NOISESCALE;
-        private decimal NOISESCALEW;
-
-        CommandLine cmd;
-
-        public class CommandLine
-        {
-            private readonly Process process;
-
-            public delegate void onOutputHandler(CommandLine sender, string e);
-            public event onOutputHandler OutputHandler;
-
-            public CommandLine()
-            {
-                try
-                {
-                    process = new Process()
-                    {
-                        StartInfo = new ProcessStartInfo("cmd.exe")
-                        {
-                            Arguments = "/k",
-                            RedirectStandardInput = true,
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true,
-                            UseShellExecute = false,
-                            CreateNoWindow = true
-                        }
-                    };
-                    process.OutputDataReceived += Command_OutputDataReceived;
-                    process.ErrorDataReceived += Command_ErrorDataReceived;
-                    process.Start();
-                    process.BeginOutputReadLine();
-                    process.BeginErrorReadLine();
-                }
-                catch (Exception e)
-                {
-                    Trace.WriteLine(e.Message);
-                }
-            }
-
-            void Command_ErrorDataReceived(object sender, DataReceivedEventArgs e)
-            {
-                OnOutput(e.Data);
-            }
-
-            void Command_OutputDataReceived(object sender, DataReceivedEventArgs e)
-            {
-                OnOutput(e.Data);
-            }
-
-            private void OnOutput(string data)
-            {
-                OutputHandler?.Invoke(this, data);
-            }
-
-            public void Write(string data)
-            {
-                try
-                {
-                    process.StandardInput.WriteLine(data);
-                }
-                catch (Exception e)
-                {
-                    Trace.WriteLine(e.Message);
-                }
-            }
-        }
-
-
-
-
-
-        private void TTS(string text, int speaker)
-        {
-            cmd.Write("t");
-            cmd.Write($"[LENGTH={LENGTHSCALE}][NOISE={NOISESCALE}][NOISEW={NOISESCALEW}]{Regex.Replace(text, @"\r?\n", " ")}");
-            cmd.Write(speaker.ToString());
         }
     }
 

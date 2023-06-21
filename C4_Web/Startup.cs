@@ -33,14 +33,15 @@ namespace C4_Web
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
             if (!app.Environment.IsDevelopment())
-                app.UseExceptionHandler("/Error"); app.UseHsts();
+               app.UseExceptionHandler("/Error"); 
+            app.UseHsts();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
             app.MapControllerRoute(
              name: "default",
-             pattern: "{controller=Home}/{action=zhuanhuan}/{id?}");
+             pattern: "{controller=Home}/{action=index}/{id?}");
 
         }
     }
